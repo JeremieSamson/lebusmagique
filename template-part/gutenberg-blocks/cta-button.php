@@ -29,9 +29,10 @@ if( !empty($block['align']) ) {
 $label = get_field('cta_label') ?: 'Libellé';
 // $icon = get_field('cta_icon') ?: '';
 $link = get_field('cta_link');
+$link_url = is_array($link) ? ($link['url'] ?? '') : $link;
 // $background_color = get_field('background_color');
 // $text_color = get_field('text_color');
 ?>
-  <a class="<?php echo $className; ?>" href="<?php echo $link['url']; ?>">
+  <a class="<?php echo $className; ?>" href="<?php echo $link_url; ?>">
     <span class="a-button__label"><?php echo $label; ?></span>
   </a>

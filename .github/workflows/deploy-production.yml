@@ -6,8 +6,10 @@ on:
       - main
 
 jobs:
-  deploy-theme:
-    name: "Deploy on production server"
+  # Hébergement OVH historique, conservé jusqu'à la bascule DNS vers seopress
+  # (#108). À supprimer une fois lebusmagiquelille.fr servi par seopress.
+  deploy-theme-ovh:
+    name: "Deploy on production server (OVH)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,3 +25,41 @@ jobs:
             password: ${{ secrets.FTP_PASSWORD_PROD }}
             localDir: .
             remoteDir: www/wp-content/themes/busmagique
+
+  # Même mécanique que deploy-staging.yml (Tailscale + rsync sur seopress),
+  # seul le chemin cible change.
+  deploy-theme-seopress:
+    name: "Deploy on production server (seopress)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install Composer dependencies"
+        run: composer install --no-dev --optimize-autoloader --no-interaction
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SEOPRESS_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p 2222 -H "${{ secrets.SEOPRESS_SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy theme via rsync
+        run: |
+          rsync -az \
+            --rsync-path="sudo rsync" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='.sass-cache' \
+            --exclude='*.map' \
+            -e "ssh -i ~/.ssh/id_deploy -p 2222" \
+            ./ \
+            "${{ secrets.SEOPRESS_SSH_USERNAME }}@${{ secrets.SEOPRESS_SSH_HOST }}:${{ secrets.PRODUCTION_REMOTE_PATH }}"

@@ -22,3 +22,6 @@ le-bus-magique-*.json
 
 # Notes de travail internes (comptes rendus, brouillons client)
 .claude-work/
+
+# Secrets locaux (webhook Slack du watcher SERP)
+.env
