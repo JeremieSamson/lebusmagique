@@ -100,3 +100,18 @@
   }
 
 }
+
+.ife_event .img_placeholder {
+  position: relative;
+  overflow: hidden;
+}
+
+.img_placeholder__img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+}
