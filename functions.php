@@ -254,6 +254,9 @@ function mkwvs_scripts_styles(){
     wp_register_script('jquery','https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js', array(), '', true);
     wp_enqueue_script('jquery');
 
+    // Load : HelloAsso script in footer (keeps jQuery out of the head)
+    wp_script_add_data('hello-asso', 'group', 1);
+
     // Load : Underscore JS
     wp_register_script('underscore-js', get_template_directory_uri(). '/js/underscore-min.js',array('jquery'), '', true );
     wp_enqueue_script('underscore-js'); // Enqueue it!
