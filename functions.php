@@ -204,19 +204,6 @@ if (!function_exists('mkwvs_clean_head')){
     }
 }
 
-add_filter('wp_resource_hints', 'mkwvs_font_resource_hints', 10, 2);
-function mkwvs_font_resource_hints(array $urls, string $relation_type): array
-{
-    if ('preconnect' !== $relation_type || is_admin()) {
-        return $urls;
-    }
-
-    $urls[] = 'https://fonts.googleapis.com';
-    $urls[] = ['href' => 'https://fonts.gstatic.com', 'crossorigin'];
-
-    return $urls;
-}
-
 // Deregister Embed Js
 function mkwvs_deregister_embed(){
     wp_deregister_script( 'wp-embed' );
@@ -226,7 +213,6 @@ function mkwvs_deregister_embed(){
 function mkwvs_scripts_styles(){
 
     // FONTS
-    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:ital,wght@0,500;0,600;0,800;1,500;1,600;1,800&display=swap', array(), null);
 
     // STYLES
 
