@@ -18,7 +18,7 @@ add_action('init', 'mkwvs_migrate_legal_pages');
 
 function mkwvs_migrate_legal_pages(): void
 {
-    if ((int) get_option('mkwvs_legal_pages_migrated', 0) >= 5) {
+    if ((int) get_option('mkwvs_legal_pages_migrated', 0) >= 6) {
         return;
     }
 
@@ -35,7 +35,7 @@ function mkwvs_migrate_legal_pages(): void
     ) && $ok;
 
     if ($ok) {
-        update_option('mkwvs_legal_pages_migrated', 5);
+        update_option('mkwvs_legal_pages_migrated', 6);
     }
 }
 
@@ -86,7 +86,7 @@ function mkwvs_legal_protect_email(string $content): string
 
 function mkwvs_legal_page_is_outdated(string $content): bool
 {
-    foreach (['À COMPLÉTER', '59000 Lille', 'Umami', 'uReserve', 'prestataires de réservation', MKWVS_LEGAL_EMAIL] as $marker) {
+    foreach (['À COMPLÉTER', 'Le site est hébergé par OVH SAS', 'avec Matomo', 'uReserve', 'prestataires de réservation', MKWVS_LEGAL_EMAIL] as $marker) {
         if (str_contains($content, $marker)) {
             return true;
         }
@@ -152,7 +152,11 @@ function mkwvs_legal_page_content_mentions(): string
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>Le site est hébergé par OVH SAS, 2 rue Kellermann, 59100 Roubaix, France. Téléphone : 1007.</p>
+<p>Le site est hébergé par Symfolidity (SEOPress.host), SASU au capital de 1 000 €, 108 rue Bayard, 59000 Lille, France, RCS Lille Métropole 912 206 372. Contact : contact@seopress.host.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Le serveur est fourni par OVH SAS, 2 rue Kellermann, 59100 Roubaix, France. Téléphone : 1007.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading -->
@@ -279,7 +283,7 @@ function mkwvs_legal_page_content_confidentialite(): string
 <!-- wp:list -->
 <ul class="wp-block-list">
 <!-- wp:list-item -->
-<li>OVH, pour l'hébergement du site et des données qu'il contient</li>
+<li>Symfolidity (SEOPress.host), pour l'hébergement du site et des données qu'il contient, sur un serveur situé en France</li>
 <!-- /wp:list-item -->
 <!-- wp:list-item -->
 <li>Brevo, pour l'envoi des e-mails de la newsletter et des e-mails de suivi de vos demandes</li>
@@ -317,7 +321,7 @@ function mkwvs_legal_page_content_confidentialite(): string
 <li>Demandes de privatisation : 3 ans à compter du dernier échange, et jusqu'à 10 ans pour les pièces comptables associées à un événement réalisé, conformément à nos obligations légales</li>
 <!-- /wp:list-item -->
 <!-- wp:list-item -->
-<li>Statistiques de fréquentation du site : 13 mois</li>
+<li>Statistiques de fréquentation du site : données anonymes, sans cookie ni adresse IP conservée (voir « Mesure d'audience »)</li>
 <!-- /wp:list-item -->
 </ul>
 <!-- /wp:list -->
@@ -327,7 +331,7 @@ function mkwvs_legal_page_content_confidentialite(): string
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>Nous mesurons la fréquentation du site avec Matomo, installé sur le serveur qui héberge le site. Les statistiques produites restent chez nous et ne sont transmises à aucune régie publicitaire. Elles nous servent uniquement à comprendre quelles pages sont consultées afin d'améliorer le site.</p>
+<p>Nous mesurons la fréquentation du site avec Umami, un outil de mesure d'audience sans cookie, installé sur un serveur de notre prestataire d'hébergement situé en France. Il ne conserve ni votre adresse IP ni aucun identifiant permettant de vous reconnaître d'une visite à l'autre. Les statistiques produites ne sont transmises à aucune régie publicitaire. Elles nous servent uniquement à comprendre quelles pages sont consultées afin d'améliorer le site.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading -->
