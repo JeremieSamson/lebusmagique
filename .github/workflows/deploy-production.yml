@@ -6,29 +6,12 @@ on:
       - main
 
 jobs:
-  # Hébergement OVH historique, conservé jusqu'à la bascule DNS vers seopress
-  # (#108). À supprimer une fois lebusmagiquelille.fr servi par seopress.
-  deploy-theme-ovh:
-    name: "Deploy on production server (OVH)"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: "Install Composer dependencies"
-        run: composer install --no-dev --optimize-autoloader --no-interaction
-
-      - name: Upload files to FTP
-        uses: matteodf/lftp-upload@v1.1.0
-        with:
-            host: ${{ secrets.FTP_HOST_PROD }}
-            username: ${{ secrets.FTP_USERNAME_PROD }}
-            password: ${{ secrets.FTP_PASSWORD_PROD }}
-            localDir: .
-            remoteDir: www/wp-content/themes/busmagique
-
-  # Même mécanique que deploy-staging.yml (Tailscale + rsync sur seopress),
-  # seul le chemin cible change.
-  deploy-theme-seopress:
+  # Le SSH public de seopress (2222) est restreint par IP : les runners
+  # GitHub ne peuvent pas être whitelistés. Le runner rejoint le tailnet
+  # comme nœud éphémère (tag:ci) et déploie via l'adresse Tailscale du
+  # serveur. SEOPRESS_SSH_HOST doit donc être l'adresse tailnet
+  # (100.68.109.63 / srv1), pas l'IP publique.
+  deploy-theme:
     name: "Deploy on production server (seopress)"
     runs-on: ubuntu-latest
     steps:
@@ -51,6 +34,8 @@ jobs:
           chmod 600 ~/.ssh/id_deploy
           ssh-keyscan -p 2222 -H "${{ secrets.SEOPRESS_SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
+      # Les fichiers du thème appartiennent à nobody:nogroup ; le user de deploy
+      # dispose du sudo sans mot de passe, d'où --rsync-path="sudo rsync".
       - name: Deploy theme via rsync
         run: |
           rsync -az \
