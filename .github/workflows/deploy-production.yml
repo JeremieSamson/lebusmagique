@@ -48,3 +48,14 @@ jobs:
             -e "ssh -i ~/.ssh/id_deploy -p 2222" \
             ./ \
             "${{ secrets.SEOPRESS_SSH_USERNAME }}@${{ secrets.SEOPRESS_SSH_HOST }}:${{ secrets.PRODUCTION_REMOTE_PATH }}"
+
+      # Les pages restent une semaine dans le cache LiteSpeed : sans purge, un
+      # changement de template ou de CSS n'apparaîtrait pas avant expiration.
+      - name: Purge LiteSpeed cache
+        run: |
+          WP_ROOT="${PRODUCTION_REMOTE_PATH%/wp-content/*}"
+          ssh -i ~/.ssh/id_deploy -p 2222 \
+            "${{ secrets.SEOPRESS_SSH_USERNAME }}@${{ secrets.SEOPRESS_SSH_HOST }}" \
+            "sudo -u nobody /usr/local/lsws/lsphp83/bin/php /usr/local/bin/wp --path=$WP_ROOT litespeed-purge all"
+        env:
+          PRODUCTION_REMOTE_PATH: ${{ secrets.PRODUCTION_REMOTE_PATH }}
