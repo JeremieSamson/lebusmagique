@@ -369,7 +369,7 @@ function mkwvs_schema_inject_page_specific(): void
                     'name' => "Quand a lieu le brunch sur la péniche ?",
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text' => "Tous les dimanches, de 11h à 15h. Le brunch n'est servi que le dimanche ; les jeudi et vendredi midi, la péniche propose des plats du jour.",
+                        'text' => "Tous les dimanches, de 11h à 15h, avec une arrivée entre 11h et 13h30 : en arrivant à 13h30, on a encore le temps de bruncher jusqu'à 15h. Le brunch n'est servi que le dimanche ; les jeudi et vendredi midi, la péniche propose des plats du jour.",
                     ],
                 ],
                 [
@@ -385,7 +385,7 @@ function mkwvs_schema_inject_page_specific(): void
                     'name' => "Faut-il réserver pour bruncher ?",
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text' => "C'est conseillé. La réservation se fait en ligne ; s'il n'y a plus de place, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un mail.",
+                        'text' => "C'est conseillé. Les réservations sont prises pour une arrivée entre 11h et 13h30, en ligne ; s'il n'y a plus de place, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un mail.",
                     ],
                 ],
                 [
