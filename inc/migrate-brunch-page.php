@@ -16,7 +16,7 @@ add_action('init', 'mkwvs_migrate_brunch_page', 11);
 
 function mkwvs_migrate_brunch_page(): void
 {
-    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 6) {
+    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 7) {
         return;
     }
 
@@ -38,14 +38,14 @@ function mkwvs_migrate_brunch_page(): void
     $page = get_page_by_path('brunch-lille');
 
     if ($page instanceof WP_Post) {
-        if (!str_contains($page->post_content, 'brunch-assiette-complete')) {
+        if (!str_contains($page->post_content, 'energy bowl, plat du jour')) {
             wp_update_post([
                 'ID' => $page->ID,
                 'post_content' => mkwvs_brunch_page_content($photos),
             ]);
         }
 
-        update_option('mkwvs_brunch_page_migrated', 6);
+        update_option('mkwvs_brunch_page_migrated', 7);
 
         return;
     }
@@ -87,7 +87,7 @@ function mkwvs_migrate_brunch_page(): void
 
     flush_rewrite_rules(false);
 
-    update_option('mkwvs_brunch_page_migrated', 6);
+    update_option('mkwvs_brunch_page_migrated', 7);
 }
 
 function mkwvs_brunch_photos(): array
@@ -205,7 +205,7 @@ function mkwvs_brunch_page_content(array $photos): string
     <li class="brunch__offer">
       <span class="brunch__label">Le brunch magique</span>
       <strong class="brunch__price">23,50 €</strong>
-      <p>La formule complète : bowl, salé du jour, douceur, jus bio, thé et café à volonté.</p>
+      <p>La formule complète : energy bowl, plat du jour, pâtisserie, jus bio, thé et café à volonté.</p>
     </li>
     <li class="brunch__offer brunch__offer--featured">
       <span class="brunch__label">Le brunch gourmand</span>

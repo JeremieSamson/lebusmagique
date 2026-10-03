@@ -279,7 +279,7 @@ function mkwvs_schema_inject_page_specific(): void
                 [
                     '@type' => 'MenuItem',
                     'name' => 'Le brunch magique simple',
-                    'description' => "Energy bowl, proposition salée du jour, douceur sucrée, jus de fruits bio, thé et café à volonté.",
+                    'description' => "Energy bowl, plat du jour, pâtisserie, jus bio, thé et café à volonté.",
                     'offers' => ['@type' => 'Offer', 'price' => '23.50', 'priceCurrency' => 'EUR'],
                 ],
                 [
