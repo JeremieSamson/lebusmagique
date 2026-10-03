@@ -258,6 +258,44 @@ function mkwvs_schema_inject_page_specific(): void
         if (!empty($hours)) {
             $schema['openingHoursSpecification'] = $hours;
         }
+    } elseif ($template === 'templates/brunch-lille.php') {
+        $schema = mkwvs_schema_build_base($data, 'Restaurant');
+        $schema['description'] = "Brunch maison tous les dimanches de 11h à 15h sur une péniche à Lille, à l'entrée de la Citadelle. Cuisine bio et de saison.";
+        $schema['servesCuisine'] = ['Brunch', 'Française', 'Végétarienne'];
+        $schema['priceRange'] = '€€';
+        $schema['acceptsReservations'] = 'True';
+        $schema['openingHoursSpecification'] = [
+            [
+                '@type' => 'OpeningHoursSpecification',
+                'dayOfWeek' => 'Sunday',
+                'opens' => '11:00',
+                'closes' => '15:00',
+            ],
+        ];
+        $schema['hasMenu'] = [
+            '@type' => 'Menu',
+            'name' => 'Le brunch magique',
+            'hasMenuItem' => [
+                [
+                    '@type' => 'MenuItem',
+                    'name' => 'Le brunch magique simple',
+                    'description' => "Energy bowl, proposition salée du jour, douceur sucrée, jus de fruits bio, thé et café à volonté.",
+                    'offers' => ['@type' => 'Offer', 'price' => '23.50', 'priceCurrency' => 'EUR'],
+                ],
+                [
+                    '@type' => 'MenuItem',
+                    'name' => 'Le brunch magique gourmand',
+                    'description' => "Le brunch magique simple avec une boisson gourmande.",
+                    'offers' => ['@type' => 'Offer', 'price' => '26.50', 'priceCurrency' => 'EUR'],
+                ],
+                [
+                    '@type' => 'MenuItem',
+                    'name' => "La formule des p'tits moussaillons",
+                    'description' => "Le brunch pour les enfants.",
+                    'offers' => ['@type' => 'Offer', 'price' => '12.00', 'priceCurrency' => 'EUR'],
+                ],
+            ],
+        ];
     } elseif ($template === 'templates/location.php') {
         $schema = mkwvs_schema_build_base($data, ['LocalBusiness', 'EventVenue']);
         $schema['description'] = "Privatisation d'une péniche à Lille pour un anniversaire, un séminaire, une soirée d'entreprise ou un mariage, à l'entrée de la Citadelle.";
@@ -311,6 +349,59 @@ function mkwvs_schema_inject_page_specific(): void
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
                         'text' => "Oui. Le logement du Marinier, à l'arrière du bateau, se loue à la nuit pour deux à trois personnes, avec sa terrasse privée et sa salle de bain.",
+                    ],
+                ],
+            ],
+        ];
+
+        echo "\n" . '<script type="application/ld+json">'
+            . wp_json_encode($faq, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+            . '</script>' . "\n";
+    }
+
+    if ($template === 'templates/brunch-lille.php') {
+        $faq = [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => [
+                [
+                    '@type' => 'Question',
+                    'name' => "Quand a lieu le brunch sur la péniche ?",
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => "Tous les dimanches, de 11h à 15h. Le brunch n'est servi que le dimanche ; les jeudi et vendredi midi, la péniche propose des plats du jour.",
+                    ],
+                ],
+                [
+                    '@type' => 'Question',
+                    'name' => "Combien coûte le brunch ?",
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => "Le brunch magique simple coûte 23,50 €. La version gourmande ajoute une boisson gourmande pour 3 € de plus, et la formule enfant, celle des p'tits moussaillons, est à 12 €.",
+                    ],
+                ],
+                [
+                    '@type' => 'Question',
+                    'name' => "Faut-il réserver pour bruncher ?",
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => "C'est conseillé. La réservation se fait en ligne ; s'il n'y a plus de place, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un mail.",
+                    ],
+                ],
+                [
+                    '@type' => 'Question',
+                    'name' => "Faut-il adhérer à l'association pour bruncher à bord ?",
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => "Oui. Le Bus Magique est une association, l'adhésion est donc nécessaire. Son montant est libre et elle se prend directement à bord.",
+                    ],
+                ],
+                [
+                    '@type' => 'Question',
+                    'name' => "Où se trouve la péniche ?",
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => "Avenue Cuvier, 59800 Lille, à l'entrée de la Citadelle, le long de la Deûle. Métro République Beaux-Arts, arrêt de bus Champ de Mars, et le parking du Champ de Mars juste à côté.",
                     ],
                 ],
             ],

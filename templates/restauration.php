@@ -89,6 +89,10 @@
                 <?php endif; ?>
               <?php endforeach; ?>
 
+              <?php if (function_exists('mkwvs_brunch_page_url')) : ?>
+                <p><a href="<?php echo esc_url(mkwvs_brunch_page_url()); ?>" data-umami-event="brunch-entree" data-umami-event-source="restauration">Tout savoir sur notre brunch du dimanche sur la péniche</a></p>
+              <?php endif; ?>
+
             </div>
           </div>
         <?php endif; ?>
