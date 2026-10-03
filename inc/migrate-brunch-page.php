@@ -16,7 +16,7 @@ add_action('init', 'mkwvs_migrate_brunch_page', 11);
 
 function mkwvs_migrate_brunch_page(): void
 {
-    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 4) {
+    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 5) {
         return;
     }
 
@@ -38,14 +38,14 @@ function mkwvs_migrate_brunch_page(): void
     $page = get_page_by_path('brunch-lille');
 
     if ($page instanceof WP_Post) {
-        if (!str_contains($page->post_content, 'brunch__gallery')) {
+        if (!str_contains($page->post_content, 'brunch-cake-pain-au-chocolat')) {
             wp_update_post([
                 'ID' => $page->ID,
                 'post_content' => mkwvs_brunch_page_content($photos),
             ]);
         }
 
-        update_option('mkwvs_brunch_page_migrated', 4);
+        update_option('mkwvs_brunch_page_migrated', 5);
 
         return;
     }
@@ -87,7 +87,7 @@ function mkwvs_migrate_brunch_page(): void
 
     flush_rewrite_rules(false);
 
-    update_option('mkwvs_brunch_page_migrated', 4);
+    update_option('mkwvs_brunch_page_migrated', 5);
 }
 
 function mkwvs_brunch_photos(): array
@@ -105,9 +105,9 @@ function mkwvs_brunch_photos(): array
             'id' => mkwvs_peniche_theme_image_id('images/brunch-carrot-cake.jpg', "Carrot cake maison au glaçage et aux graines, sur la péniche du Bus Magique"),
             'alt' => "Carrot cake maison au glaçage et aux graines, sur la péniche du Bus Magique",
         ],
-        'img_cafe' => [
-            'id' => mkwvs_peniche_theme_image_id('images/brunch-cafe-au-lait.jpg', "Café au lait préparé au bar de la péniche du Bus Magique"),
-            'alt' => "Café au lait préparé au bar de la péniche du Bus Magique",
+        'img_brunch' => [
+            'id' => mkwvs_peniche_theme_image_id('images/brunch-cake-pain-au-chocolat.jpg', "Brunch du dimanche sur la péniche : cake aux graines, pain au chocolat, tartine salée et mug de thé"),
+            'alt' => "Brunch du dimanche sur la péniche : cake aux graines, pain au chocolat, tartine salée et mug de thé",
         ],
         'photo_peniche' => [
             'id' => mkwvs_peniche_photo_id('peniche-exterieur.jpg', "La péniche du Bus Magique amarrée sur la Deûle, au pied des remparts de la Citadelle de Lille"),
@@ -183,10 +183,10 @@ function mkwvs_brunch_page_content(array $photos): string
   </div>
 
   <div class="brunch__gallery">
+    <figure>{{img_brunch}}</figure>
     <figure>{{img_sale}}</figure>
     <figure>{{img_cookies}}</figure>
     <figure>{{img_carrot}}</figure>
-    <figure>{{img_cafe}}</figure>
   </div>
   <p class="brunch__caption">Quelques assiettes et douceurs maison de la péniche&nbsp;: la carte change au fil des dimanches et des saisons.</p>
 
