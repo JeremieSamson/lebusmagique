@@ -79,6 +79,30 @@
 .brunch__plate p,
 .brunch__offer p { margin: 0; font-size: 15px; line-height: 1.55; }
 
+.brunch__gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.brunch__gallery figure { margin: 0; }
+
+.brunch__gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 0 0 24px 24px;
+}
+
+.brunch__caption {
+  margin: 14px 0 72px;
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+}
+
 .brunch__offers { margin-bottom: 72px; }
 
 .brunch__price {
