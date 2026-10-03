@@ -1,0 +1,122 @@
+/* Page « Brunch sur une péniche à Lille » : complète css/peniche.css. */
+
+.brunch__infos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  list-style: none;
+  margin: -24px 0 72px;
+  padding: 0;
+}
+
+.brunch__info {
+  padding: 8px 22px;
+  border: 3px solid #000;
+  border-radius: 20px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.brunch__info--yellow { background: #ffd202; }
+.brunch__info--jungle-green { background: #36a585; }
+.brunch__info--tomato { background: #ec6620; }
+
+.brunch__menu { text-align: center; margin-bottom: 72px; }
+
+.brunch__icon { display: block; width: 80px; height: auto; margin: 0 auto 16px; }
+
+.brunch__lead { max-width: 640px; margin: 0 auto 40px; line-height: 1.6; }
+
+.brunch__plates,
+.brunch__offers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.brunch__plate,
+.brunch__offer {
+  --accent: #9bb909;
+  flex: 1 1 190px;
+  max-width: 310px;
+  padding: 28px 20px 36px;
+  border: 4px solid var(--accent);
+  border-radius: 0 0 50px 50px;
+  background: #fff;
+  text-align: center;
+}
+
+.brunch__plate--green { --accent: #9bb909; }
+.brunch__plate--tomato { --accent: #ec6620; }
+.brunch__plate--red { --accent: #e6534e; }
+.brunch__plate--jungle-green { --accent: #36a585; }
+.brunch__plate--yellow { --accent: #ffd202; }
+
+.brunch__label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+/* Le jaune ne se lit pas en texte sur fond blanc. */
+.brunch__plate--yellow .brunch__label { color: #1a1a1a; }
+
+.brunch__plate strong { display: block; margin-bottom: 8px; font-size: 20px; }
+
+.brunch__plate p,
+.brunch__offer p { margin: 0; font-size: 15px; line-height: 1.55; }
+
+.brunch__offers { margin-bottom: 72px; }
+
+.brunch__price {
+  display: block;
+  margin: 4px 0 14px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.brunch__offer--featured {
+  --accent: #1a1a1a;
+  background: #ffd202;
+}
+
+.brunch__book {
+  margin-bottom: 72px;
+  padding: 40px 24px 48px;
+  border-radius: 0 0 50px 50px;
+  background: #ffd202;
+  text-align: center;
+}
+
+.brunch__book h2 { margin: 0 0 16px; font-size: 26px; line-height: 1.2; }
+
+.brunch__book p { max-width: 640px; margin: 0 auto; line-height: 1.6; }
+
+.brunch__book .cta {
+  width: fit-content;
+  min-width: 200px;
+  max-width: 100%;
+  margin: 28px auto 0;
+  padding: 0 20px;
+}
+
+.peniche__more { margin: 48px 0 0; text-align: center; }
+
+@media screen and (min-width: 900px) {
+  .brunch__offer--featured { transform: translateY(-12px); }
+}
