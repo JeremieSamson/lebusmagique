@@ -16,7 +16,7 @@ add_action('init', 'mkwvs_migrate_brunch_page', 11);
 
 function mkwvs_migrate_brunch_page(): void
 {
-    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 2) {
+    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 3) {
         return;
     }
 
@@ -38,14 +38,14 @@ function mkwvs_migrate_brunch_page(): void
     $page = get_page_by_path('brunch-lille');
 
     if ($page instanceof WP_Post) {
-        if (!str_contains($page->post_content, 'brunch__plates')) {
+        if (!str_contains($page->post_content, '13h30')) {
             wp_update_post([
                 'ID' => $page->ID,
                 'post_content' => mkwvs_brunch_page_content($photos),
             ]);
         }
 
-        update_option('mkwvs_brunch_page_migrated', 2);
+        update_option('mkwvs_brunch_page_migrated', 3);
 
         return;
     }
@@ -87,7 +87,7 @@ function mkwvs_migrate_brunch_page(): void
 
     flush_rewrite_rules(false);
 
-    update_option('mkwvs_brunch_page_migrated', 2);
+    update_option('mkwvs_brunch_page_migrated', 3);
 }
 
 function mkwvs_brunch_photos(): array
@@ -129,7 +129,7 @@ function mkwvs_brunch_page_content(array $photos): string
 
   <ul class="brunch__infos">
     <li class="brunch__info brunch__info--yellow">Tous les dimanches</li>
-    <li class="brunch__info brunch__info--jungle-green">De 11h à 15h</li>
+    <li class="brunch__info brunch__info--jungle-green">Arrivée entre 11h et 13h30</li>
     <li class="brunch__info brunch__info--tomato">Dès 23,50 €</li>
   </ul>
 
@@ -187,7 +187,7 @@ function mkwvs_brunch_page_content(array $photos): string
 
   <div class="brunch__book">
     <h2>Réserver son brunch du dimanche</h2>
-    <p>Le brunch a lieu uniquement le dimanche, de 11h à 15h, et on vous conseille de réserver. S'il n'y a plus de place en ligne, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un petit mail.</p>
+    <p>Le brunch est servi uniquement le dimanche, de 11h à 15h, et on vous conseille de réserver. Les réservations sont prises pour une arrivée entre 11h et 13h30&nbsp;: en arrivant à 13h30, on a encore le temps de bruncher tranquillement jusqu'à 15h. S'il n'y a plus de place en ligne, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un petit mail.</p>
     <a class="cta cta--tomato" href="https://uniiti.com/shop/le-bus-magique" target="_blank" rel="noopener" data-umami-event="reservation-resto" data-umami-event-source="brunch">Réserver mon brunch</a>
   </div>
 
@@ -225,7 +225,7 @@ function mkwvs_brunch_page_content(array $photos): string
   <div class="peniche__faq">
     <details open>
       <summary>Quand a lieu le brunch sur la péniche ?</summary>
-      <p>Tous les dimanches, de 11h à 15h. Le brunch n'est servi que le dimanche&nbsp;; les jeudi et vendredi midi, la péniche propose des plats du jour.</p>
+      <p>Tous les dimanches, de 11h à 15h, avec une arrivée entre 11h et 13h30&nbsp;: en arrivant à 13h30, on a encore le temps de bruncher jusqu'à 15h. Le brunch n'est servi que le dimanche&nbsp;; les jeudi et vendredi midi, la péniche propose des plats du jour.</p>
     </details>
     <details>
       <summary>Combien coûte le brunch ?</summary>
@@ -233,7 +233,7 @@ function mkwvs_brunch_page_content(array $photos): string
     </details>
     <details>
       <summary>Faut-il réserver pour bruncher ?</summary>
-      <p>C'est conseillé. La réservation se fait en ligne&nbsp;; s'il n'y a plus de place, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un mail.</p>
+      <p>C'est conseillé. Les réservations sont prises pour une arrivée entre 11h et 13h30, en ligne&nbsp;; s'il n'y a plus de place, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un mail.</p>
     </details>
     <details>
       <summary>Faut-il adhérer à l'association pour bruncher à bord ?</summary>
