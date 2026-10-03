@@ -16,7 +16,7 @@ add_action('init', 'mkwvs_migrate_seo_content', 20);
 
 function mkwvs_migrate_seo_content(): void
 {
-    if ((int) get_option('mkwvs_seo_content_migrated', 0) >= 3) {
+    if ((int) get_option('mkwvs_seo_content_migrated', 0) >= 4) {
         return;
     }
 
@@ -25,8 +25,9 @@ function mkwvs_migrate_seo_content(): void
     mkwvs_migrate_dead_staging_link();
     mkwvs_migrate_noindex_evenements();
     mkwvs_migrate_trash_default_post();
+    mkwvs_migrate_home_title_peniche();
 
-    update_option('mkwvs_seo_content_migrated', 3);
+    update_option('mkwvs_seo_content_migrated', 4);
 }
 
 /**
@@ -36,7 +37,7 @@ function mkwvs_migrate_seo_content(): void
 function mkwvs_seo_titles(): array
 {
     return [
-        'accueil' => "Le Bus Magique, tiers-lieu associatif sur l'eau à Lille",
+        'accueil' => 'Péniche Le Bus Magique : bar, concerts et tiers-lieu à Lille',
         'restauration' => "Bar et restaurant sur une péniche à Lille | Le Bus Magique",
         'coworking' => "Coworking sur une péniche à Lille | Le Bus Magique",
         'location' => "Privatiser une péniche à Lille | Le Bus Magique",
@@ -57,6 +58,24 @@ function mkwvs_migrate_seo_titles(): void
 
         update_post_meta($page->ID, '_seopress_titles_title', $title);
     }
+}
+
+/**
+ * L'ancien title de l'accueil ne disait pas « péniche » : on ne le remplace
+ * que s'il n'a pas été retouché depuis, pour ne pas écraser une saisie cliente.
+ */
+function mkwvs_migrate_home_title_peniche(): void
+{
+    $page = get_page_by_path('accueil');
+    if (!$page instanceof WP_Post) {
+        return;
+    }
+
+    if (get_post_meta($page->ID, '_seopress_titles_title', true) !== "Le Bus Magique, tiers-lieu associatif sur l'eau à Lille") {
+        return;
+    }
+
+    update_post_meta($page->ID, '_seopress_titles_title', mkwvs_seo_titles()['accueil']);
 }
 
 function mkwvs_seo_descriptions(): array

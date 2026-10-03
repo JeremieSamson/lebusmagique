@@ -99,6 +99,7 @@ function mkwvs_schema_build_base(array $data, string|array $type = 'Organization
         '@context' => 'https://schema.org',
         '@type' => $type,
         'name' => $data['name'],
+        'alternateName' => 'Péniche Le Bus Magique',
         'url' => $data['url'],
         'logo' => $data['logo'],
         'image' => $data['logo'],
@@ -179,6 +180,20 @@ function mkwvs_schema_inject_global(): void
         . '</script>' . "\n";
 }
 add_action('wp_head', 'mkwvs_schema_inject_global', 99);
+
+/**
+ * SEOPress nomme le WebSite d'après le title de l'accueil (« Le Bus Magique - Montez à bord ! »).
+ * Google en tire le nom de site affiché en SERP : on lui donne la marque, et le nom
+ * de la fiche Google Business en alternatif pour lever l'ambiguïté avec le dessin animé.
+ */
+function mkwvs_schema_website_name(array $schema): array
+{
+    $schema['name'] = get_bloginfo('name');
+    $schema['alternateName'] = 'Péniche Le Bus Magique';
+
+    return $schema;
+}
+add_filter('seopress_schemas_website', 'mkwvs_schema_website_name');
 
 /**
  * Schema.org spécifique : injecté sur les pages /restauration/ et /coworking/.
