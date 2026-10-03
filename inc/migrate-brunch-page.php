@@ -16,7 +16,7 @@ add_action('init', 'mkwvs_migrate_brunch_page', 11);
 
 function mkwvs_migrate_brunch_page(): void
 {
-    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 5) {
+    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 6) {
         return;
     }
 
@@ -38,14 +38,14 @@ function mkwvs_migrate_brunch_page(): void
     $page = get_page_by_path('brunch-lille');
 
     if ($page instanceof WP_Post) {
-        if (!str_contains($page->post_content, 'brunch-cake-pain-au-chocolat')) {
+        if (!str_contains($page->post_content, 'brunch-assiette-complete')) {
             wp_update_post([
                 'ID' => $page->ID,
                 'post_content' => mkwvs_brunch_page_content($photos),
             ]);
         }
 
-        update_option('mkwvs_brunch_page_migrated', 5);
+        update_option('mkwvs_brunch_page_migrated', 6);
 
         return;
     }
@@ -87,27 +87,35 @@ function mkwvs_migrate_brunch_page(): void
 
     flush_rewrite_rules(false);
 
-    update_option('mkwvs_brunch_page_migrated', 5);
+    update_option('mkwvs_brunch_page_migrated', 6);
 }
 
 function mkwvs_brunch_photos(): array
 {
     $photos = [
-        'img_sale' => [
-            'id' => mkwvs_peniche_theme_image_id('images/brunch-assiette-salee.jpg', "Assiette salée de saison servie sur la péniche du Bus Magique à Lille"),
-            'alt' => "Assiette salée de saison servie sur la péniche du Bus Magique à Lille",
+        'img_complet' => [
+            'id' => mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', "Brunch du dimanche sur la péniche du Bus Magique : tartine salée, pain au chocolat, cake aux graines, bowl et café"),
+            'alt' => "Brunch du dimanche sur la péniche du Bus Magique : tartine salée, pain au chocolat, cake aux graines, bowl et café",
         ],
-        'img_cookies' => [
-            'id' => mkwvs_peniche_theme_image_id('images/brunch-cookies.jpg', "Cookies maison aux pépites de chocolat de la péniche du Bus Magique"),
-            'alt' => "Cookies maison aux pépites de chocolat de la péniche du Bus Magique",
+        'img_tartine' => [
+            'id' => mkwvs_peniche_theme_image_id('images/brunch-tartine-salee.jpg', "Tartine salée de saison, viennoiseries et jus d'orange au brunch de la péniche à Lille"),
+            'alt' => "Tartine salée de saison, viennoiseries et jus d'orange au brunch de la péniche à Lille",
         ],
-        'img_carrot' => [
-            'id' => mkwvs_peniche_theme_image_id('images/brunch-carrot-cake.jpg', "Carrot cake maison au glaçage et aux graines, sur la péniche du Bus Magique"),
-            'alt' => "Carrot cake maison au glaçage et aux graines, sur la péniche du Bus Magique",
+        'img_salon' => [
+            'id' => mkwvs_peniche_theme_image_id('images/brunch-table-salon.jpg', "Assiette de brunch servie dans le salon de la péniche du Bus Magique à Lille"),
+            'alt' => "Assiette de brunch servie dans le salon de la péniche du Bus Magique à Lille",
         ],
-        'img_brunch' => [
-            'id' => mkwvs_peniche_theme_image_id('images/brunch-cake-pain-au-chocolat.jpg', "Brunch du dimanche sur la péniche : cake aux graines, pain au chocolat, tartine salée et mug de thé"),
-            'alt' => "Brunch du dimanche sur la péniche : cake aux graines, pain au chocolat, tartine salée et mug de thé",
+        'img_bowl' => [
+            'id' => mkwvs_peniche_theme_image_id('images/brunch-bowl-cheesecake.jpg', "Bowl granola et pudding de chia, pain au chocolat et cheesecake aux fruits rouges au brunch de la péniche"),
+            'alt' => "Bowl granola et pudding de chia, pain au chocolat et cheesecake aux fruits rouges au brunch de la péniche",
+        ],
+        'img_dressage' => [
+            'id' => mkwvs_peniche_theme_image_id('images/brunch-dressage-assiettes.jpg', "Dressage des assiettes salées du brunch dans la cuisine du Bus Magique"),
+            'alt' => "Dressage des assiettes salées du brunch dans la cuisine du Bus Magique",
+        ],
+        'img_cookie' => [
+            'id' => mkwvs_peniche_theme_image_id('images/brunch-cookie.jpg', "Cookie maison aux pépites de chocolat et tasse de thé au brunch de la péniche"),
+            'alt' => "Cookie maison aux pépites de chocolat et tasse de thé au brunch de la péniche",
         ],
         'photo_peniche' => [
             'id' => mkwvs_peniche_photo_id('peniche-exterieur.jpg', "La péniche du Bus Magique amarrée sur la Deûle, au pied des remparts de la Citadelle de Lille"),
@@ -183,12 +191,14 @@ function mkwvs_brunch_page_content(array $photos): string
   </div>
 
   <div class="brunch__gallery">
-    <figure>{{img_brunch}}</figure>
-    <figure>{{img_sale}}</figure>
-    <figure>{{img_cookies}}</figure>
-    <figure>{{img_carrot}}</figure>
+    <figure>{{img_complet}}</figure>
+    <figure>{{img_tartine}}</figure>
+    <figure>{{img_salon}}</figure>
+    <figure>{{img_bowl}}</figure>
+    <figure>{{img_dressage}}</figure>
+    <figure>{{img_cookie}}</figure>
   </div>
-  <p class="brunch__caption">Quelques assiettes et douceurs maison de la péniche&nbsp;: la carte change au fil des dimanches et des saisons.</p>
+  <p class="brunch__caption">Le brunch de la péniche, photographié par Justine Fa&nbsp;: la carte change au fil des dimanches et des saisons.</p>
 
   <h2 class="peniche__title">Les formules et les prix</h2>
   <ul class="brunch__offers">
