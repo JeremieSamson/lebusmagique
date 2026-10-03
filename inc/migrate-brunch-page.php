@@ -16,7 +16,7 @@ add_action('init', 'mkwvs_migrate_brunch_page', 11);
 
 function mkwvs_migrate_brunch_page(): void
 {
-    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 1) {
+    if ((int) get_option('mkwvs_brunch_page_migrated', 0) >= 2) {
         return;
     }
 
@@ -38,7 +38,14 @@ function mkwvs_migrate_brunch_page(): void
     $page = get_page_by_path('brunch-lille');
 
     if ($page instanceof WP_Post) {
-        update_option('mkwvs_brunch_page_migrated', 1);
+        if (!str_contains($page->post_content, 'brunch__plates')) {
+            wp_update_post([
+                'ID' => $page->ID,
+                'post_content' => mkwvs_brunch_page_content($photos),
+            ]);
+        }
+
+        update_option('mkwvs_brunch_page_migrated', 2);
 
         return;
     }
@@ -80,16 +87,12 @@ function mkwvs_migrate_brunch_page(): void
 
     flush_rewrite_rules(false);
 
-    update_option('mkwvs_brunch_page_migrated', 1);
+    update_option('mkwvs_brunch_page_migrated', 2);
 }
 
 function mkwvs_brunch_photos(): array
 {
     $photos = [
-        'img_assiette' => [
-            'id' => mkwvs_peniche_theme_image_id('images/peniche-activite-restauration.jpg', "Le bar et le restaurant de la péniche du Bus Magique à Lille"),
-            'alt' => "Légumes de saison cuisinés pour le brunch de la péniche",
-        ],
         'photo_peniche' => [
             'id' => mkwvs_peniche_photo_id('peniche-exterieur.jpg', "La péniche du Bus Magique amarrée sur la Deûle, au pied des remparts de la Citadelle de Lille"),
             'alt' => "La péniche du Bus Magique amarrée sur la Deûle, à l'entrée de la Citadelle de Lille",
@@ -120,38 +123,72 @@ function mkwvs_brunch_page_content(array $photos): string
 {
     $content = <<<'HTML'
 <!-- wp:html -->
-<div class="peniche">
+<div class="peniche brunch">
 
-  <p class="peniche__chapo">Tous les dimanches, de 11h à 15h, la péniche du Bus Magique sert un brunch fait maison, amarrée sur la Deûle à l'entrée de la Citadelle de Lille. Une cuisine maison, bio et de saison, du salé, du sucré, et du thé et du café à volonté, <strong>à bord d'un bateau de 1954&nbsp;!</strong></p>
+  <p class="peniche__chapo">Tous les dimanches, la péniche du Bus Magique sert son brunch, amarrée sur la Deûle à l'entrée de la Citadelle de Lille. Une cuisine maison, bio et de saison, du salé, du sucré, et du thé et du café à volonté, <strong>à bord d'un bateau de 1954&nbsp;!</strong></p>
 
-  <div class="peniche__split">
-    <div class="peniche__split-text">
-      <h2>Le brunch magique, ce qu'il y a dans l'assiette</h2>
-      <ul>
-        <li>un energy bowl : fromage blanc végétal aux graines de chia, fruits frais, granola et fruits secs</li>
-        <li>une proposition salée du jour (tarte salée, frittata, crumble de légumes, velouté, petite salade…) à découvrir sur place</li>
-        <li>une part de douceur sucrée, à choisir parmi deux</li>
-        <li>un jus de fruits bio</li>
-        <li>du thé du jour et du café, à volonté</li>
-      </ul>
-      <p>La proposition salée change selon le jour et la saison, et tout est fait maison.</p>
-    </div>
-    <figure class="peniche__split-media">
-      {{img_assiette}}
-    </figure>
+  <ul class="brunch__infos">
+    <li class="brunch__info brunch__info--yellow">Tous les dimanches</li>
+    <li class="brunch__info brunch__info--jungle-green">De 11h à 15h</li>
+    <li class="brunch__info brunch__info--tomato">Dès 23,50 €</li>
+  </ul>
+
+  <div class="brunch__menu">
+    <img class="brunch__icon" src="/wp-content/uploads/2021/05/icon-brunch-brunch.svg" alt="" aria-hidden="true" width="80" height="40">
+    <h2 class="peniche__title">Ce qu'il y a dans l'assiette</h2>
+    <p class="brunch__lead">Le brunch magique, c'est du salé, du sucré et de quoi boire à volonté. La proposition salée change selon le jour et la saison.</p>
+    <ul class="brunch__plates">
+      <li class="brunch__plate brunch__plate--green">
+        <span class="brunch__label">Pour commencer</span>
+        <strong>L'energy bowl</strong>
+        <p>Fromage blanc végétal aux graines de chia, fruits frais, granola et fruits secs.</p>
+      </li>
+      <li class="brunch__plate brunch__plate--tomato">
+        <span class="brunch__label">Le salé</span>
+        <strong>La proposition du jour</strong>
+        <p>Tarte salée, frittata, crumble de légumes, velouté, petite salade… à découvrir sur place.</p>
+      </li>
+      <li class="brunch__plate brunch__plate--red">
+        <span class="brunch__label">Le sucré</span>
+        <strong>Une part de douceur</strong>
+        <p>À choisir parmi deux douceurs sucrées.</p>
+      </li>
+      <li class="brunch__plate brunch__plate--jungle-green">
+        <span class="brunch__label">À boire</span>
+        <strong>Un jus de fruits bio</strong>
+        <p>Pour accompagner le salé comme le sucré.</p>
+      </li>
+      <li class="brunch__plate brunch__plate--yellow">
+        <span class="brunch__label">À volonté</span>
+        <strong>Thé du jour et café</strong>
+        <p>Resservez-vous autant que vous voulez.</p>
+      </li>
+    </ul>
   </div>
 
   <h2 class="peniche__title">Les formules et les prix</h2>
-  <ul class="peniche__prices">
-    <li><strong>Le brunch magique simple</strong><span>23,50 €</span></li>
-    <li><strong>Le brunch magique gourmand</strong><span>+ 3 €, avec une boisson gourmande</span></li>
-    <li><strong>La formule des p'tits moussaillons</strong><span>12 € pour les enfants</span></li>
+  <ul class="brunch__offers">
+    <li class="brunch__offer">
+      <span class="brunch__label">Le brunch magique</span>
+      <strong class="brunch__price">23,50 €</strong>
+      <p>La formule complète : bowl, salé du jour, douceur, jus bio, thé et café à volonté.</p>
+    </li>
+    <li class="brunch__offer brunch__offer--featured">
+      <span class="brunch__label">Le brunch gourmand</span>
+      <strong class="brunch__price">26,50 €</strong>
+      <p>La formule complète, avec une boisson gourmande en plus (+&nbsp;3&nbsp;€).</p>
+    </li>
+    <li class="brunch__offer">
+      <span class="brunch__label">Les p'tits moussaillons</span>
+      <strong class="brunch__price">12 €</strong>
+      <p>La formule des enfants, pour bruncher en famille.</p>
+    </li>
   </ul>
 
-  <div class="peniche__assoc">
+  <div class="brunch__book">
     <h2>Réserver son brunch du dimanche</h2>
     <p>Le brunch a lieu uniquement le dimanche, de 11h à 15h, et on vous conseille de réserver. S'il n'y a plus de place en ligne, appelez-nous pendant nos horaires d'ouverture ou envoyez-nous un petit mail.</p>
-    <p><a class="cta cta--tomato" href="https://uniiti.com/shop/le-bus-magique" target="_blank" rel="noopener" data-umami-event="reservation-resto" data-umami-event-source="brunch">Réserver mon brunch</a></p>
+    <a class="cta cta--tomato" href="https://uniiti.com/shop/le-bus-magique" target="_blank" rel="noopener" data-umami-event="reservation-resto" data-umami-event-source="brunch">Réserver mon brunch</a>
   </div>
 
   <div class="peniche__split">

@@ -333,6 +333,11 @@ function mkwvs_scripts_styles(){
         wp_enqueue_style('peniche-style');
     }
 
+    if (is_page_template('templates/brunch-lille.php')) {
+        wp_register_style('brunch-style', get_template_directory_uri() . '/css/brunch.css', ['peniche-style'], filemtime(get_template_directory() . '/css/brunch.css'), 'all');
+        wp_enqueue_style('brunch-style');
+    }
+
     // CSS de la page hébergement
     if (is_page_template('templates/hebergement.php')) {
         wp_register_style('hebergement-style', get_template_directory_uri() . '/css/hebergement.css', ['styles'], filemtime(get_template_directory() . '/css/hebergement.css'), 'all');
