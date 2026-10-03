@@ -1,6 +1,7 @@
 /* Page « Notre péniche à Lille » : mise en page dédiée. */
 
-.page-template-peniche-lille .hublot .big-title {
+.page-template-peniche-lille .hublot .big-title,
+.page-template-brunch-lille .hublot .big-title {
   font-size: 18px;
   line-height: 1.2;
   width: 72%;
@@ -10,11 +11,13 @@
 }
 
 @media screen and (min-width: 768px) {
-  .page-template-peniche-lille .hublot .big-title { font-size: 26px; }
+  .page-template-peniche-lille .hublot .big-title,
+  .page-template-brunch-lille .hublot .big-title { font-size: 26px; }
 }
 
 @media screen and (min-width: 1280px) {
-  .page-template-peniche-lille .hublot .big-title { font-size: 32px; }
+  .page-template-peniche-lille .hublot .big-title,
+  .page-template-brunch-lille .hublot .big-title { font-size: 32px; }
 }
 
 .peniche {
@@ -243,3 +246,28 @@
 }
 
 .peniche__faq p { margin: 0 0 20px; line-height: 1.6; }
+
+/* Page brunch : liste du contenu, grille des prix et renvoi vers la carte. */
+
+.peniche__split-text ul { margin: 0 0 16px; padding-left: 20px; }
+.peniche__split-text li { line-height: 1.6; margin-bottom: 6px; }
+
+.peniche__prices {
+  list-style: none;
+  max-width: 640px;
+  margin: 0 auto 72px;
+  padding: 0;
+}
+
+.peniche__prices li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 14px 0;
+  border-bottom: 1px dashed currentColor;
+}
+
+.peniche__prices span { white-space: nowrap; }
+
+.peniche__more { text-align: center; margin: 48px 0 0; }

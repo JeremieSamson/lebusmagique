@@ -49,6 +49,7 @@ require get_template_directory() . '/inc/hebergement-calendar.php';
 require get_template_directory() . '/inc/migrate-hebergement-page.php';
 require get_template_directory() . '/inc/migrate-menu-hebergement.php';
 require get_template_directory() . '/inc/migrate-peniche-page.php';
+require get_template_directory() . '/inc/migrate-brunch-page.php';
 require get_template_directory() . '/inc/seo-fixes.php';
 require get_template_directory() . '/inc/migrate-seo-content.php';
 
@@ -326,8 +327,8 @@ function mkwvs_scripts_styles(){
         wp_enqueue_style('prog-categories-style');
     }
 
-    // CSS de la page péniche
-    if (is_page_template('templates/peniche-lille.php')) {
+    // CSS de la page péniche, partagé avec la page brunch
+    if (is_page_template(['templates/peniche-lille.php', 'templates/brunch-lille.php'])) {
         wp_register_style('peniche-style', get_template_directory_uri() . '/css/peniche.css', ['styles'], filemtime(get_template_directory() . '/css/peniche.css'), 'all');
         wp_enqueue_style('peniche-style');
     }
