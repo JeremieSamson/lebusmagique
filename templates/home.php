@@ -31,6 +31,16 @@
             border-radius: 50%;
             transform: rotate(-8deg);
         }
+
+        .section-content--brunch {
+            padding-top: 60px;
+        }
+
+        @media screen and (min-width: 1024px) {
+            .bloc-media-text--brunch .bloc-media-text__media img {
+                width: 340px;
+            }
+        }
     </style>
 
 <?php $hp = get_page_by_path('accueil'); ?>
@@ -185,9 +195,17 @@
                 </div>
             </div>
 
-            <?php $brunch = get_page_by_path('brunch-lille'); ?>
-            <?php $brunch_image = function_exists('mkwvs_peniche_theme_image_id') ? mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', 'Brunch du dimanche sur la péniche du Bus Magique à Lille') : 0; ?>
-            <?php if ($brunch instanceof WP_Post && $brunch_image) : ?>
+            <div class="bloc-fullwidth">
+                <img src="<?php echo get_stylesheet_directory_uri() . '/images/hp-map@2x.jpg'; ?>" alt="Plan d'accès à la péniche Le Bus Magique, avenue Cuvier à Lille" loading="lazy" decoding="async">
+            </div>
+
+        </section>
+
+        <?php $brunch = get_page_by_path('brunch-lille'); ?>
+        <?php $brunch_image = function_exists('mkwvs_peniche_theme_image_id') ? mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', 'Brunch du dimanche sur la péniche du Bus Magique à Lille') : 0; ?>
+        <?php $has_brunch = $brunch instanceof WP_Post && $brunch_image; ?>
+        <?php if ($has_brunch) : ?>
+            <section class="section-content section-content--brunch">
                 <div class="bloc-media-text bloc-media-text--right bloc-media-text--brunch">
                     <div class="bloc-media-text__media">
                         <?php mkwvs_the_image($brunch_image, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], 'Brunch du dimanche sur la péniche du Bus Magique à Lille'); ?>
@@ -198,13 +216,8 @@
                         <a href="<?php echo esc_url(get_permalink($brunch)); ?>" class="cta cta--yellow" data-umami-event="brunch-entree" data-umami-event-source="accueil">Je viens bruncher !</a>
                     </div>
                 </div>
-            <?php endif; ?>
-
-            <div class="bloc-fullwidth">
-                <img src="<?php echo get_stylesheet_directory_uri() . '/images/hp-map@2x.jpg'; ?>" alt="Plan d'accès à la péniche Le Bus Magique, avenue Cuvier à Lille" loading="lazy" decoding="async">
-            </div>
-
-        </section>
+            </section>
+        <?php endif; ?>
     <?php endwhile; ?>
 <?php endif; ?>
 
