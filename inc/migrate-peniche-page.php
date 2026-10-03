@@ -307,7 +307,7 @@ function mkwvs_peniche_page_content(array $photos): string
       </a>
       <div class="peniche__usage-body">
         <strong>Manger et boire un verre</strong>
-        <p>Le bar et le restaurant de la péniche servent des plats du jour les jeudi et vendredi midi, et un brunch le dimanche. Bières locales, vins et boissons chaudes, cuisine maison, bio et de saison.</p>
+        <p>Le bar et le restaurant de la péniche servent des plats du jour les jeudi et vendredi midi, et un <a href="/brunch-lille/" data-umami-event="brunch-entree" data-umami-event-source="peniche-lille">brunch le dimanche</a>. Bières locales, vins et boissons chaudes, cuisine maison, bio et de saison.</p>
         <a class="cta cta--jungle-green" href="/restauration/" data-umami-event="peniche-activite" data-umami-event-cible="restauration">Voir la carte</a>
       </div>
     </li>
@@ -375,7 +375,7 @@ function mkwvs_peniche_page_content(array $photos): string
     </details>
     <details>
       <summary>Peut-on manger et boire un verre sur la péniche ?</summary>
-      <p>Oui. La péniche sert des plats du jour les jeudi et vendredi midi et un brunch le dimanche, avec une cuisine maison, bio et de saison. Le bar propose des bières locales, des vins et des boissons chaudes, à toute heure du jeudi au dimanche (et même le mercredi à la belle saison)&nbsp;!</p>
+      <p>Oui. La péniche sert des plats du jour les jeudi et vendredi midi et un <a href="/brunch-lille/" data-umami-event="brunch-entree" data-umami-event-source="peniche-lille">brunch le dimanche</a>, avec une cuisine maison, bio et de saison. Le bar propose des bières locales, des vins et des boissons chaudes, à toute heure du jeudi au dimanche (et même le mercredi à la belle saison)&nbsp;!</p>
     </details>
     <details>
       <summary>Faut-il adhérer à l'association pour monter à bord ?</summary>

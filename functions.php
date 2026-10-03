@@ -50,6 +50,7 @@ require get_template_directory() . '/inc/migrate-hebergement-page.php';
 require get_template_directory() . '/inc/migrate-menu-hebergement.php';
 require get_template_directory() . '/inc/migrate-peniche-page.php';
 require get_template_directory() . '/inc/migrate-brunch-page.php';
+require get_template_directory() . '/inc/migrate-brunch-links.php';
 require get_template_directory() . '/inc/seo-fixes.php';
 require get_template_directory() . '/inc/migrate-seo-content.php';
 

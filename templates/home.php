@@ -15,6 +15,32 @@
             cursor: zoom-out;
             transform: scale(2);
         }
+
+        .bloc-media-text--brunch .bloc-media-text__media {
+            flex: 0 0 48%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .bloc-media-text--brunch .bloc-media-text__media img {
+            width: min(85%, 380px);
+            height: auto;
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+            border: 16px solid #ffd202;
+            border-radius: 50%;
+            transform: rotate(-8deg);
+        }
+
+        .section-content--brunch {
+            padding-top: 60px;
+        }
+
+        @media screen and (min-width: 1024px) {
+            .bloc-media-text--brunch .bloc-media-text__media img {
+                width: 340px;
+            }
+        }
     </style>
 
 <?php $hp = get_page_by_path('accueil'); ?>
@@ -174,6 +200,24 @@
             </div>
 
         </section>
+
+        <?php $brunch = get_page_by_path('brunch-lille'); ?>
+        <?php $brunch_image = function_exists('mkwvs_peniche_theme_image_id') ? mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', 'Brunch du dimanche sur la péniche du Bus Magique à Lille') : 0; ?>
+        <?php $has_brunch = $brunch instanceof WP_Post && $brunch_image; ?>
+        <?php if ($has_brunch) : ?>
+            <section class="section-content section-content--brunch">
+                <div class="bloc-media-text bloc-media-text--right bloc-media-text--brunch">
+                    <div class="bloc-media-text__media">
+                        <?php mkwvs_the_image($brunch_image, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], 'Brunch du dimanche sur la péniche du Bus Magique à Lille'); ?>
+                    </div>
+                    <div class="bloc-media-text__content">
+                        <h3>Brunch du dimanche</h3>
+                        <p>Tous les dimanches de 11h à 15h, un brunch maison, bio et de saison sur la péniche : energy bowl, plat du jour, pâtisserie, jus bio, thé et café à volonté.</p>
+                        <a href="<?php echo esc_url(get_permalink($brunch)); ?>" class="cta cta--yellow" data-umami-event="brunch-entree" data-umami-event-source="accueil">Je viens bruncher !</a>
+                    </div>
+                </div>
+            </section>
+        <?php endif; ?>
     <?php endwhile; ?>
 <?php endif; ?>
 

@@ -260,6 +260,16 @@ function mkwvs_schema_inject_page_specific(): void
         }
     } elseif ($template === 'templates/brunch-lille.php') {
         $schema = mkwvs_schema_build_base($data, 'Restaurant');
+        $schema['url'] = (string) get_permalink();
+        $brunch_image = get_the_post_thumbnail_url(null, 'full');
+        if ($brunch_image) {
+            $schema['image'] = $brunch_image;
+        }
+        $schema['geo'] = [
+            '@type' => 'GeoCoordinates',
+            'latitude' => 50.63845,
+            'longitude' => 3.05166,
+        ];
         $schema['description'] = "Brunch maison tous les dimanches de 11h à 15h sur une péniche à Lille, à l'entrée de la Citadelle. Cuisine bio et de saison.";
         $schema['servesCuisine'] = ['Brunch', 'Française', 'Végétarienne'];
         $schema['priceRange'] = '€€';

@@ -177,6 +177,7 @@ function mkwvs_hebergement_page_content(array $photos): string
     <div class="hebergement__split-text">
       <h2>Une nuit à bord, au fil de la Deûle</h2>
       <p>Le studio est indépendant du <a href="/restauration/">bar et du restaurant</a> : vous avez votre entrée, votre terrasse sur le pont et votre calme. Les hublots donnent sur le canal, la Citadelle commence de l'autre côté du quai.</p>
+      <p>Le dimanche, le <a href="/brunch-lille/" data-umami-event="brunch-entree" data-umami-event-source="gite">brunch de la péniche</a> est servi à bord de 11h à 15h&nbsp;: de quoi bien commencer la journée sans quitter le bateau.</p>
       <p>C'est une adresse pour une nuit insolite à Lille, une escapade à deux ou un week-end dans le Nord, dans un logement insolite que personne d'autre ne propose : une vraie péniche, avec sa timonerie et sa barre à roue d'origine.</p>
     </div>
     <figure class="hebergement__split-media">
