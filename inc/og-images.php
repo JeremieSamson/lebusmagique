@@ -100,10 +100,35 @@ function mkwvs_og_end_buffer(): void
     echo "\n";
     echo '<meta property="og:image" content="' . esc_url($url) . '" />' . "\n";
     echo '<meta property="og:image:secure_url" content="' . esc_url($url) . '" />' . "\n";
-    echo '<meta property="og:image:width" content="1200" />' . "\n";
-    echo '<meta property="og:image:height" content="630" />' . "\n";
-    echo '<meta property="og:image:type" content="image/jpeg" />' . "\n";
+    $size = mkwvs_og_image_size($url);
+    if ($size) {
+        echo '<meta property="og:image:width" content="' . $size[0] . '" />' . "\n";
+        echo '<meta property="og:image:height" content="' . $size[1] . '" />' . "\n";
+        echo '<meta property="og:image:type" content="' . esc_attr($size['mime']) . '" />' . "\n";
+    }
     echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
     echo '<meta name="twitter:image" content="' . esc_url($url) . '" />' . "\n";
 }
 add_action('wp_head', 'mkwvs_og_end_buffer', 99);
+
+/**
+ * Dimensions réelles du fichier : une source plus petite que 1200×630 n'est pas
+ * agrandie par WordPress, la taille 'og-image' peut donc sortir plus étroite.
+ */
+function mkwvs_og_image_size(string $url): array
+{
+    $uploads = wp_get_upload_dir();
+    $path = str_replace(
+        [$uploads['baseurl'], get_stylesheet_directory_uri()],
+        [$uploads['basedir'], get_stylesheet_directory()],
+        strtok($url, '?')
+    );
+
+    if ($path === $url || !is_file($path)) {
+        return [];
+    }
+
+    $size = getimagesize($path);
+
+    return $size ?: [];
+}

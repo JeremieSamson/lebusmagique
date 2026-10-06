@@ -175,3 +175,12 @@ add_shortcode('hebergement_calendrier', static function ($atts): string {
 
     return mkwvs_hebergement_calendar(max(1, (int) $atts['mois']));
 });
+
+add_filter('nav_menu_link_attributes', static function (array $atts, $item): array {
+    if ('post_type' === $item->type && 'page' === $item->object && get_page_by_path(MKWVS_HEBERGEMENT_PAGE_SLUG)?->ID === (int) $item->object_id) {
+        $atts['data-umami-event'] = 'hebergement-entree';
+        $atts['data-umami-event-source'] = 'nav';
+    }
+
+    return $atts;
+}, 10, 2);

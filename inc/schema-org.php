@@ -124,6 +124,19 @@ function mkwvs_schema_build_base(array $data, string|array $type = 'Organization
 }
 
 /**
+ * Photos affichées sur la page gîte, photo à la une en tête.
+ */
+function mkwvs_schema_hebergement_images(): array
+{
+    preg_match_all('#<img[^>]+src="([^"]+)"#', (string) get_post_field('post_content'), $matches);
+
+    return array_values(array_unique(array_filter([
+        (string) get_the_post_thumbnail_url(null, 'full'),
+        ...$matches[1],
+    ])));
+}
+
+/**
  * Dates concrètes (startDate/endDate ISO 8601) du prochain événement d'une liste
  * de facebook_events à venir. Google exige startDate sur Event : sans occurrence
  * datée, ne pas émettre de schema Event.
@@ -236,7 +249,23 @@ function mkwvs_schema_inject_page_specific(): void
         ];
     } elseif ($template === 'templates/hebergement.php') {
         $schema = mkwvs_schema_build_base($data, 'LodgingBusiness');
-        $schema['description'] = "Studio insolite à louer à la nuit sur une péniche à Lille, aux portes de la Citadelle, pour deux à trois personnes.";
+        unset($schema['logo']);
+        $schema['@id'] = get_permalink() . '#logement';
+        $schema['name'] = 'Le Studio du Marinier';
+        $schema['alternateName'] = 'Logement du Marinier, péniche Le Bus Magique';
+        $schema['url'] = (string) get_permalink();
+        $schema['image'] = mkwvs_schema_hebergement_images();
+        $schema['geo'] = [
+            '@type' => 'GeoCoordinates',
+            'latitude' => 50.63845,
+            'longitude' => 3.05166,
+        ];
+        $schema['containedInPlace'] = [
+            '@type' => 'LocalBusiness',
+            'name' => $data['name'],
+            'url' => $data['url'],
+        ];
+        $schema['description'] = "Logement insolite à Lille : studio à louer à la nuit sur une péniche, aux portes de la Citadelle, pour deux à trois personnes.";
         $schema['numberOfRooms'] = 1;
         $schema['petsAllowed'] = false;
         $schema['maximumAttendeeCapacity'] = 3;
@@ -449,6 +478,14 @@ function mkwvs_schema_inject_page_specific(): void
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
                         'text' => "Oui. Le studio occupe le logement du Marinier, à l'arrière du bateau, avec son entrée et sa terrasse privée.",
+                    ],
+                ],
+                [
+                    '@type' => 'Question',
+                    'name' => "Que faire autour de ce logement insolite à Lille ?",
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => "Le parc de la Citadelle et ses promenades au bord de la Deûle commencent au pied du bateau, le zoo de Lille se trouve dans le parc et le Vieux-Lille est à une dizaine de minutes à pied. Le dimanche, le brunch est servi à bord de 11h à 15h.",
                     ],
                 ],
                 [
