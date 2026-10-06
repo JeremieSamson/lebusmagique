@@ -75,7 +75,7 @@ function mkwvs_migrate_hebergement_page(): void
     update_post_meta(
         $page_id,
         '_seopress_titles_desc',
-        "Louez le studio du Marinier sur une péniche amarrée à la Citadelle de Lille. Pour 2 à 3 personnes, terrasse et vue sur le canal. Disponibilités en ligne."
+        "Logement insolite à Lille : le studio du Marinier, sur une péniche amarrée à la Citadelle. Pour 2 à 3 personnes, terrasse sur le pont et vue sur la Deûle."
     );
 
     flush_rewrite_rules(false);
@@ -175,7 +175,7 @@ function mkwvs_hebergement_page_content(array $photos): string
 
   <div class="hebergement__split">
     <div class="hebergement__split-text">
-      <h2>Une nuit à bord, au fil de la Deûle</h2>
+      <h2>Une nuit insolite à Lille, au fil de la Deûle</h2>
       <p>Le studio est indépendant du <a href="/restauration/">bar et du restaurant</a> : vous avez votre entrée, votre terrasse sur le pont et votre calme. Les hublots donnent sur le canal, la Citadelle commence de l'autre côté du quai.</p>
       <p>Le dimanche, le <a href="/brunch-lille/" data-umami-event="brunch-entree" data-umami-event-source="gite">brunch de la péniche</a> est servi à bord de 11h à 15h&nbsp;: de quoi bien commencer la journée sans quitter le bateau.</p>
       <p>C'est une adresse pour une nuit insolite à Lille, une escapade à deux ou un week-end dans le Nord, dans un logement insolite que personne d'autre ne propose : une vraie péniche, avec sa timonerie et sa barre à roue d'origine.</p>
@@ -185,7 +185,7 @@ function mkwvs_hebergement_page_content(array $photos): string
     </figure>
   </div>
 
-  <h2 class="hebergement__title">Le logement</h2>
+  <h2 class="hebergement__title">Un logement insolite tout équipé</h2>
   <ul class="hebergement__features">
     <li><strong>2 à 3 personnes</strong><span>2 lits et une salle de bain privative</span></li>
     <li><strong>Kitchenette équipée</strong><span>Coin salon, réfrigérateur, plaques et micro-ondes</span></li>
@@ -226,6 +226,10 @@ function mkwvs_hebergement_page_content(array $photos): string
     <details>
       <summary>Le logement est-il indépendant du bar et du restaurant ?</summary>
       <p>Oui. Le studio occupe le logement du Marinier, à l'arrière du bateau, avec son entrée et sa terrasse privée.</p>
+    </details>
+    <details>
+      <summary>Que faire autour de ce logement insolite à Lille ?</summary>
+      <p>Le parc de la Citadelle et ses promenades au bord de la Deûle commencent au pied du bateau, le zoo de Lille se trouve dans le parc et le Vieux-Lille est à une dizaine de minutes à pied. Le dimanche, le brunch est servi à bord de 11h à 15h.</p>
     </details>
     <details>
       <summary>Comment réserver une nuit sur la péniche ?</summary>
