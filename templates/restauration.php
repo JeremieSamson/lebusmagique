@@ -73,7 +73,7 @@
                 <p class="day"><?php echo $subtitle; ?></p>
               <?php endif; ?>
 
-              <p>Formules, prix et réservation : tout est sur la page du brunch.</p>
+              <p style="text-align: center;">Formules, prix et réservation : tout est sur la page du brunch.</p>
 
               <?php if (function_exists('mkwvs_brunch_page_url')) : ?>
                 <a class="cta cta--yellow" style="margin: 24px auto 8px;" href="<?php echo esc_url(mkwvs_brunch_page_url()); ?>" data-umami-event="brunch-entree" data-umami-event-source="restauration">Voir le brunch du dimanche</a>
