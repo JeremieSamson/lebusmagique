@@ -225,7 +225,7 @@ function mkwvs_schema_inject_page_specific(): void
 
     if ($template === 'templates/restauration.php') {
         $schema = mkwvs_schema_build_base($data, 'Restaurant');
-        $schema['description'] = "Restaurant et bar sur péniche à Lille. Saveurs locales, cuisine saine et conviviale, options végétariennes, brunch dominical.";
+        $schema['description'] = "Restaurant et bar sur péniche à Lille. Saveurs locales, cuisine saine et conviviale, options végétariennes.";
         $schema['servesCuisine'] = ['Française', 'Bistro', 'Végétarienne'];
         $schema['priceRange'] = '€€';
         $schema['acceptsReservations'] = 'True';

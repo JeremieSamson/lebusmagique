@@ -16,7 +16,7 @@ add_action('init', 'mkwvs_migrate_seo_content', 20);
 
 function mkwvs_migrate_seo_content(): void
 {
-    if ((int) get_option('mkwvs_seo_content_migrated', 0) >= 4) {
+    if ((int) get_option('mkwvs_seo_content_migrated', 0) >= 5) {
         return;
     }
 
@@ -26,8 +26,9 @@ function mkwvs_migrate_seo_content(): void
     mkwvs_migrate_noindex_evenements();
     mkwvs_migrate_trash_default_post();
     mkwvs_migrate_home_title_peniche();
+    mkwvs_migrate_restauration_desc_without_brunch();
 
-    update_option('mkwvs_seo_content_migrated', 4);
+    update_option('mkwvs_seo_content_migrated', 5);
 }
 
 /**
@@ -78,6 +79,24 @@ function mkwvs_migrate_home_title_peniche(): void
     update_post_meta($page->ID, '_seopress_titles_title', mkwvs_seo_titles()['accueil']);
 }
 
+/**
+ * « brunch lille » revient à la page brunch : la restauration ne le cite plus
+ * dans sa description, sauf si la cliente l'a réécrite entre-temps.
+ */
+function mkwvs_migrate_restauration_desc_without_brunch(): void
+{
+    $page = get_page_by_path('restauration');
+    if (!$page instanceof WP_Post) {
+        return;
+    }
+
+    if (get_post_meta($page->ID, '_seopress_titles_desc', true) !== "Bar et restauration sur une péniche à Lille : cuisine maison, bières locales, boissons chaudes et brunch le dimanche au Bus Magique.") {
+        return;
+    }
+
+    update_post_meta($page->ID, '_seopress_titles_desc', mkwvs_seo_descriptions()['restauration']);
+}
+
 function mkwvs_seo_descriptions(): array
 {
     return [
@@ -89,7 +108,7 @@ function mkwvs_seo_descriptions(): array
         'monter-a-bord' => "Rejoignez Le Bus Magique à Lille : adhésion à prix libre, bénévolat et propositions d'activités. Montez à bord de la péniche associative.",
         'notre-histoire' => "L'histoire du Bus Magique à Lille : d'une péniche à quai à un lieu culturel associatif porté par ses bénévoles et ses adhérents.",
         'programmation' => "La programmation du Bus Magique à Lille : concerts, ateliers, cafés des langues, drag shows et jams sur une péniche associative. Agenda du mois.",
-        'restauration' => "Bar et restauration sur une péniche à Lille : cuisine maison, bières locales, boissons chaudes et brunch le dimanche au Bus Magique.",
+        'restauration' => "Bar et restauration sur une péniche à Lille : plats du jour maison les jeudis et vendredis midis, bières locales et boissons chaudes au Bus Magique.",
 
         'programmation/ateliers-artistiques' => "Ateliers créatifs et artistiques à Lille : écriture, linogravure, punch needle, illustration et modelage, animés par des intervenants locaux.",
         'programmation/bien-etre' => "Rendez-vous bien-être à Lille sur une péniche : yoga, sophrologie, réflexologie et ateliers de santé au naturel, au fil de l'eau.",

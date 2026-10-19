@@ -73,24 +73,10 @@
                 <p class="day"><?php echo $subtitle; ?></p>
               <?php endif; ?>
 
-              <?php if (!empty($top_typologie->description)) : ?>
-                <?php echo apply_filters('the_content', $top_typologie->description); ?>
-              <?php endif; ?>
-
-              <?php $sub_topologies = get_terms(array('taxonomy' => 'typologie', 'hide_empty' => false, 'child_of' => $top_typologie->term_id, 'orderby' => 'term_id', 'order' => 'ASC')); ?>
-              <?php foreach ($sub_topologies as $sub_topologie) : ?>
-                <p class="column text-font category green">
-                  <span><?php echo $sub_topologie->name; ?></span>
-                  <span><?php echo get_field('carte_typologie_price', $sub_topologie->taxonomy . '_' . $sub_topologie->term_id); ?></span>
-                  <?php $details = get_field('carte_typologie_details', $sub_topologie->taxonomy . '_' . $sub_topologie->term_id); ?>
-                </p>
-                <?php if (!empty($details)) : ?>
-                  <?php echo apply_filters('the_content', $details); ?>
-                <?php endif; ?>
-              <?php endforeach; ?>
+              <p style="text-align: center;">Formules, prix et réservation : tout est sur la page du brunch.</p>
 
               <?php if (function_exists('mkwvs_brunch_page_url')) : ?>
-                <a class="cta cta--yellow" style="margin: 24px auto 8px;" href="<?php echo esc_url(mkwvs_brunch_page_url()); ?>" data-umami-event="brunch-entree" data-umami-event-source="restauration">Tout savoir sur le brunch</a>
+                <a class="cta cta--yellow" style="margin: 24px auto 8px;" href="<?php echo esc_url(mkwvs_brunch_page_url()); ?>" data-umami-event="brunch-entree" data-umami-event-source="restauration">Voir le brunch du dimanche</a>
               <?php endif; ?>
 
             </div>
