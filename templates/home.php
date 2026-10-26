@@ -6,14 +6,119 @@
 <?php get_header(); ?>
 
     <style>
-        .zoomable {
+        .home-prog__poster {
+            display: block;
+            max-width: 520px;
+            margin: 0 auto;
             cursor: zoom-in;
-            transition: transform 0.3s ease;
         }
 
-        .zoomable.zoomed {
+        .home-prog__poster img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .home-prog__next {
+            position: relative;
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f4e8;
+        }
+
+        .home-prog__next h3 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .home-prog__next ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .home-prog__next li {
+            border-bottom: 2px dashed #000;
+        }
+
+        .home-prog__next a {
+            display: block;
+            padding: 12px 0;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .home-prog__next a:hover .home-prog__title,
+        .home-prog__next a:focus-visible .home-prog__title {
+            text-decoration: underline;
+        }
+
+        .home-prog__date {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ec6620;
+        }
+
+        .home-prog__title {
+            display: block;
+            font-weight: 600;
+        }
+
+        @media screen and (min-width: 768px) {
+            .home-prog__next ul {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                column-gap: 40px;
+            }
+
+            .home-prog__date {
+                font-size: 14px;
+            }
+        }
+
+        .home-lightbox {
+            width: 100vw;
+            max-width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            background: rgba(0, 0, 0, 0.9);
+            overflow: auto;
             cursor: zoom-out;
-            transform: scale(2);
+        }
+
+        .home-lightbox::backdrop {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .home-lightbox img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            margin: auto;
+            object-fit: contain;
+        }
+
+        .home-lightbox.is-full img {
+            max-width: none;
+            max-height: none;
+        }
+
+        .home-lightbox__close {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border: 0;
+            border-radius: 50%;
+            background: #fff;
+            font-size: 28px;
+            line-height: 1;
+            cursor: pointer;
         }
 
         .bloc-media-text--brunch .bloc-media-text__media {
@@ -262,14 +367,59 @@
 
         <section class="section-content section-content--prog">
             <h2>Prog' du mois</h2>
-            <?php
-            $image = get_field('programmation_du_mois', $hp->ID);
-            if (isset($image) && is_array($image)) : ?>
-                <?php mkwvs_the_image($image, 'full', [
-                    'class'   => 'zoomable',
-                    'sizes'   => '(max-width: 900px) 100vw, 900px',
-                    'onclick' => "this.classList.toggle('zoomed')",
-                ], 'Programmation du mois du Bus Magique'); ?>
+            <?php $image = get_field('programmation_du_mois', $hp->ID); ?>
+            <?php if (isset($image) && is_array($image)) : ?>
+                <?php $next_events = function_exists('mkwvs_upcoming_events') ? mkwvs_upcoming_events([], 6) : []; ?>
+                <div class="home-prog">
+                    <a class="home-prog__poster" href="<?php echo esc_url($image['url']); ?>" data-umami-event="programmation-affiche" data-umami-event-source="accueil" aria-label="Agrandir l'affiche de la programmation du mois">
+                        <?php mkwvs_the_image($image, 'full', [
+                            'sizes' => '(max-width: 767px) 100vw, 420px',
+                        ], 'Programmation du mois du Bus Magique'); ?>
+                    </a>
+                    <?php if (!empty($next_events)) : ?>
+                        <div class="home-prog__next">
+                            <h3>Les prochains rendez-vous</h3>
+                            <ul>
+                                <?php foreach ($next_events as $event) : ?>
+                                    <li>
+                                        <a href="<?php echo esc_url(get_permalink($event)); ?>" data-umami-event="evenement-entree" data-umami-event-source="accueil">
+                                            <span class="home-prog__date"><?php echo esc_html(mkwvs_event_date_label($event->ID)); ?></span>
+                                            <span class="home-prog__title"><?php echo esc_html(get_the_title($event)); ?></span>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <dialog class="home-lightbox" aria-label="Affiche de la programmation du mois">
+                    <button type="button" class="home-lightbox__close" aria-label="Fermer">&times;</button>
+                    <img src="<?php echo esc_url($image['url']); ?>" alt="<?php echo esc_attr($image['alt'] ?: 'Programmation du mois du Bus Magique'); ?>" loading="lazy" decoding="async">
+                </dialog>
+                <script>
+                    (function () {
+                        var poster = document.querySelector('.home-prog__poster');
+                        var dialog = document.querySelector('.home-lightbox');
+                        if (!poster || !dialog || typeof dialog.showModal !== 'function') {
+                            return;
+                        }
+
+                        poster.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            dialog.classList.remove('is-full');
+                            dialog.showModal();
+                        });
+
+                        dialog.querySelector('img').addEventListener('click', function (event) {
+                            event.stopPropagation();
+                            dialog.classList.toggle('is-full');
+                        });
+
+                        dialog.addEventListener('click', function () {
+                            dialog.close();
+                        });
+                    })();
+                </script>
             <?php elseif (have_rows('page_home_programmation_list')) : ?>
                 <div class="events">
                     <?php echo do_shortcode('[facebook_events col="2" posts_per_page="4"]'); ?>
