@@ -512,7 +512,7 @@
                     // part de ce fil et déborde du côté où il reste de la place, souvent
                     // dans l'allée entre les colonnes.
                     var stops = [];
-                    function wander(from, to, prevBlock, nextBlock) {
+                    function wander(from, to, prevBlock, nextBlock, force) {
                         var dx = to[0] - from[0];
                         var dir = dx < 0 ? -1 : 1;
                         var x1 = Math.min(from[0], to[0]);
@@ -538,12 +538,26 @@
                         // la place, de taille et de forme variables, au-dessus ou en dessous
                         // du fil. Chacune prend toute la hauteur libre à son aplomb.
                         var spots = [];
+                        var widest = null;
                         for (var t = 0.28; t <= 0.72; t += 0.04) {
                             var cx = from[0] + dx * t;
                             var high = Math.max(edge(prevBlock, true, cx - 110, cx + 110), from[1]) + 16;
                             var low = Math.min(edge(nextBlock, false, cx - 110, cx + 110), to[1]) - 20;
                             if (low - high >= 56) {
                                 spots.push({x: cx, high: high, low: low});
+                            }
+                        }
+                        if (force && !spots.length) {
+                            for (t = 0.2; t <= 0.8; t += 0.02) {
+                                cx = from[0] + dx * t;
+                                high = Math.max(edge(prevBlock, true, cx - 40, cx + 40), from[1]) + 12;
+                                low = Math.min(edge(nextBlock, false, cx - 40, cx + 40) - 12, to[1] - 12, bottom);
+                                if (!widest || low - high > widest.low - widest.high) {
+                                    widest = {x: cx, high: high, low: low};
+                                }
+                            }
+                            if (widest.low - widest.high >= 30) {
+                                spots.push(widest);
                             }
                         }
 
@@ -566,7 +580,7 @@
                         }
 
                         loops.forEach(function (spot) {
-                            var ry = random(0.32, 0.5) * Math.min(spot.low - spot.high, 100);
+                            var ry = Math.max(random(0.32, 0.5) * Math.min(spot.low - spot.high, 100), Math.min(16, (spot.low - spot.high) / 2));
                             var rx = Math.min(ry * random(0.8, 1.4), 48);
                             var up = random(0, 1) < 0.5 ? -1 : 1;
                             var y0 = up > 0 ? spot.high + random(0, spot.low - spot.high - 2 * ry) : spot.low - random(0, spot.low - spot.high - 2 * ry);
@@ -582,7 +596,7 @@
                             fixed = stops.length;
                         });
 
-                        pass(from[0] + dx * random(0.84, 0.94), Math.max(stops[stops.length - 1][1] + 10, top + Math.max(0, bottom - top) * random(0.65, 1)));
+                        pass(from[0] + dx * random(0.84, 0.94), Math.min(Math.max(bottom, top), Math.max(stops[stops.length - 1][1] + 10, top + Math.max(0, bottom - top) * random(0.65, 1))));
                         while (stops.length > fixed && (to[0] - stops[stops.length - 1][0]) * dir < 40) {
                             stops.pop();
                         }
@@ -592,7 +606,7 @@
                     var blocks = section.querySelectorAll('.bloc-media-text');
                     stops.push([first[0], first[1]]);
                     for (var n = 1; n < centers.length; n++) {
-                        wander(centers[n - 1], centers[n], blocks[n - 1], blocks[n]);
+                        wander(centers[n - 1], centers[n], blocks[n - 1], blocks[n], n === 2);
                     }
 
                     var map = section.querySelector('.bloc-fullwidth');
@@ -600,7 +614,7 @@
                         var m = map.getBoundingClientRect();
                         var last = centers[centers.length - 1];
                         var other = centers.length > 1 ? centers[centers.length - 2][0] : m.left - box.left + m.width / 2;
-                        wander(last, [other, m.top - box.top + 20], blocks[blocks.length - 1], map);
+                        wander(last, [other, m.top - box.top + 20], blocks[blocks.length - 1], map, true);
                     }
 
                     for (var k = 0; k < stops.length - 1; k++) {
