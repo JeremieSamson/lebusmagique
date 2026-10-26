@@ -51,12 +51,10 @@
             object-fit: cover;
             border: 16px solid #9bb909;
             border-radius: 50%;
-            transform: rotate(6deg);
         }
 
         .bloc-media-text--tomato .bloc-media-text__media img {
             border-color: #ec6620;
-            transform: rotate(-6deg);
         }
 
         .section-content--peniche {
@@ -141,7 +139,7 @@
             font-size: 12px;
         }
 
-        .section-content--peniche p a,
+        .bloc-media-text--oval p a,
         .home-faq p a {
             color: inherit;
             text-decoration: underline;
