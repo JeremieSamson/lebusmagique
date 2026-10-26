@@ -247,19 +247,3 @@
 
 .peniche__faq p { margin: 0 0 20px; line-height: 1.6; }
 
-
-/* Accueil : blocs repris de l'ancienne page « Notre péniche à Lille ». */
-.section-content--peniche { padding-top: 0; }
-
-@media screen and (min-width: 900px) {
-  .peniche__split--reverse .peniche__split-media { order: -1; }
-}
-
-.peniche__access--home {
-  position: relative;
-  z-index: 1;
-  max-width: 1040px;
-  margin: 60px auto 0;
-  background: #fff;
-  text-align: left;
-}

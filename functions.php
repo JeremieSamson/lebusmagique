@@ -330,8 +330,8 @@ function mkwvs_scripts_styles(){
         wp_enqueue_style('prog-categories-style');
     }
 
-    // CSS de la page péniche, partagé avec les pages brunch et accueil
-    if (is_page_template(['templates/peniche-lille.php', 'templates/brunch-lille.php', 'templates/home.php'])) {
+    // CSS de la page péniche, partagé avec la page brunch
+    if (is_page_template(['templates/peniche-lille.php', 'templates/brunch-lille.php'])) {
         wp_register_style('peniche-style', get_template_directory_uri() . '/css/peniche.css', ['styles'], filemtime(get_template_directory() . '/css/peniche.css'), 'all');
         wp_enqueue_style('peniche-style');
     }
