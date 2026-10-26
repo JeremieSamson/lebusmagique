@@ -32,10 +32,6 @@
             transform: rotate(-8deg);
         }
 
-        .section-content--brunch {
-            padding-top: 60px;
-        }
-
         @media screen and (min-width: 1024px) {
             .bloc-media-text--brunch .bloc-media-text__media img {
                 width: 340px;
@@ -64,11 +60,7 @@
         }
 
         .section-content--peniche {
-            padding-top: 40px;
-        }
-
-        .section-content--peniche .bloc-media-text + .bloc-media-text {
-            margin-top: 60px;
+            padding-top: 20px;
         }
 
         @media screen and (min-width: 1024px) {
@@ -84,7 +76,7 @@
         .home-access {
             max-width: 640px;
             margin: 0 auto;
-            padding: 40px 20px 60px;
+            padding: 60px 20px;
             text-align: center;
         }
 
@@ -260,11 +252,14 @@
             <?php endif; ?>
         </section>
 
+        <?php $brunch = get_page_by_path('brunch-lille'); ?>
+        <?php $brunch_image = function_exists('mkwvs_peniche_theme_image_id') ? mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', 'Brunch du dimanche sur la péniche du Bus Magique à Lille') : 0; ?>
+        <?php $has_brunch = $brunch instanceof WP_Post && $brunch_image; ?>
+        <?php $timonerie_id = mkwvs_peniche_photo_id('timonerie.jpg', "Timonerie de la péniche avec sa barre à roue d'origine et sa vue sur le canal"); ?>
+        <?php $studio_id = mkwvs_peniche_photo_id('studio-vue-ensemble.jpg', "Vue d'ensemble du studio du Marinier : kitchenette, coin bar et espace nuit"); ?>
         <section class="section-content section-content--beige">
 
             <h2>Que faire à bord Capitaine ?</h2>
-
-
 
             <?php $image = get_field('page_home_encart_1_image', $hp->ID); ?>
             <?php $titre = get_field('page_home_encart_1_titre', $hp->ID); ?>
@@ -282,13 +277,25 @@
                 </div>
             </div>
 
+            <?php if ($has_brunch) : ?>
+                <div class="bloc-media-text bloc-media-text--right bloc-media-text--brunch">
+                    <div class="bloc-media-text__media">
+                        <?php mkwvs_the_image($brunch_image, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], 'Brunch du dimanche sur la péniche du Bus Magique à Lille'); ?>
+                    </div>
+                    <div class="bloc-media-text__content">
+                        <h3>Brunch du dimanche</h3>
+                        <p>Tous les dimanches de 11h à 15h, un brunch maison, bio et de saison sur la péniche : energy bowl, plat du jour, pâtisserie, jus bio, thé et café à volonté.</p>
+                        <a href="<?php echo esc_url(get_permalink($brunch)); ?>" class="cta cta--yellow" data-umami-event="brunch-entree" data-umami-event-source="accueil">Je viens bruncher !</a>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <?php $image = get_field('page_home_encart_2_image', $hp->ID); ?>
             <?php $titre = get_field('page_home_encart_2_titre', $hp->ID); ?>
             <?php $description = get_field('page_home_encart_2_description', $hp->ID); ?>
             <?php $libelle = get_field('page_home_encart_2_libelle', $hp->ID); ?>
             <?php $link = get_field('page_home_encart_2_link', $hp->ID); ?>
-            <div class="bloc-media-text bloc-media-text--right">
+            <div class="bloc-media-text">
                 <div class="bloc-media-text__media">
                     <?php mkwvs_the_image($image, 'large', ['sizes' => '(max-width: 900px) 100vw, 600px'], (string) $titre); ?>
                 </div>
@@ -304,7 +311,7 @@
             <?php $description = get_field('page_home_encart_3_description', $hp->ID); ?>
             <?php $libelle = get_field('page_home_encart_3_libelle', $hp->ID); ?>
             <?php $link = get_field('page_home_encart_3_link', $hp->ID); ?>
-            <div class="bloc-media-text">
+            <div class="bloc-media-text bloc-media-text--right">
                 <div class="bloc-media-text__media">
                     <?php mkwvs_the_image($image, 'large', ['sizes' => '(max-width: 900px) 100vw, 600px'], (string) $titre); ?>
                 </div>
@@ -315,76 +322,54 @@
                 </div>
             </div>
 
+            <?php if ($studio_id) : ?>
+                <div class="bloc-media-text bloc-media-text--oval bloc-media-text--tomato">
+                    <div class="bloc-media-text__media">
+                        <?php mkwvs_the_image($studio_id, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], "Vue d'ensemble du studio du Marinier : kitchenette, coin bar et espace nuit"); ?>
+                    </div>
+                    <div class="bloc-media-text__content">
+                        <h3>Dormir à bord</h3>
+                        <p>À l'arrière du bateau, le logement du Marinier, un <a href="/dormir-sur-une-peniche-a-lille/" data-umami-event="hebergement-entree" data-umami-event-source="accueil-texte">logement insolite à Lille</a>, se loue à la nuit pour deux à trois personnes, avec sa terrasse privée sur le pont et sa vue sur le canal. C'est un hébergement indépendant du bar et du restaurant.</p>
+                        <a href="/dormir-sur-une-peniche-a-lille/" class="cta cta--tomato" data-umami-event="hebergement-entree" data-umami-event-source="accueil">Je regarde les dates</a>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="bloc-fullwidth">
                 <a href="https://www.google.com/maps/search/?api=1&amp;query=Le+Bus+Magique%2C+avenue+Cuvier%2C+59800+Lille" target="_blank" rel="noopener" data-umami-event="peniche-carte" data-umami-event-source="accueil" aria-label="Ouvrir le plan d'accès dans Google Maps">
                     <img src="<?php echo get_stylesheet_directory_uri() . '/images/hp-map@2x.jpg'; ?>" alt="Plan d'accès à la péniche Le Bus Magique, avenue Cuvier à Lille" loading="lazy" decoding="async">
                 </a>
             </div>
 
-            <div class="home-access">
-                <h2>Où est amarrée la péniche ?</h2>
-                <p>Au cœur de Lille, le long de la Deûle, juste à l'entrée de la Citadelle.</p>
-                <ul>
-                    <li><strong>Adresse :</strong> péniche Le Bus Magique, avenue Cuvier, 59800 Lille</li>
-                    <li><strong>Métro :</strong> République Beaux-Arts</li>
-                    <li><strong>Bus :</strong> arrêt Champ de Mars</li>
-                    <li><strong>V'Lille :</strong> une station à moins de 5 minutes à pied</li>
-                    <li><strong>Voiture :</strong> parking du Champ de Mars, juste à côté</li>
-                </ul>
-                <a class="cta cta--tomato" href="https://www.google.com/maps/dir/?api=1&amp;destination=Le+Bus+Magique%2C+avenue+Cuvier%2C+59800+Lille" target="_blank" rel="noopener" data-umami-event="peniche-itineraire" data-umami-event-source="accueil">Je calcule mon itinéraire</a>
-            </div>
-
         </section>
 
-        <?php $brunch = get_page_by_path('brunch-lille'); ?>
-        <?php $brunch_image = function_exists('mkwvs_peniche_theme_image_id') ? mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', 'Brunch du dimanche sur la péniche du Bus Magique à Lille') : 0; ?>
-        <?php $has_brunch = $brunch instanceof WP_Post && $brunch_image; ?>
-        <?php if ($has_brunch) : ?>
-            <section class="section-content section-content--brunch">
-                <div class="bloc-media-text bloc-media-text--right bloc-media-text--brunch">
+        <section class="section-content home-access">
+            <h2>Où est amarrée la péniche ?</h2>
+            <p>Au cœur de Lille, le long de la Deûle, juste à l'entrée de la Citadelle.</p>
+            <ul>
+                <li><strong>Adresse :</strong> péniche Le Bus Magique, avenue Cuvier, 59800 Lille</li>
+                <li><strong>Métro :</strong> République Beaux-Arts</li>
+                <li><strong>Bus :</strong> arrêt Champ de Mars</li>
+                <li><strong>V'Lille :</strong> une station à moins de 5 minutes à pied</li>
+                <li><strong>Voiture :</strong> parking du Champ de Mars, juste à côté</li>
+            </ul>
+            <a class="cta cta--tomato" href="https://www.google.com/maps/dir/?api=1&amp;destination=Le+Bus+Magique%2C+avenue+Cuvier%2C+59800+Lille" target="_blank" rel="noopener" data-umami-event="peniche-itineraire" data-umami-event-source="accueil">Je calcule mon itinéraire</a>
+        </section>
+
+        <?php if ($timonerie_id) : ?>
+            <section class="section-content section-content--peniche">
+                <h2>Une péniche citerne de 1954</h2>
+                <div class="bloc-media-text bloc-media-text--right bloc-media-text--oval">
                     <div class="bloc-media-text__media">
-                        <?php mkwvs_the_image($brunch_image, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], 'Brunch du dimanche sur la péniche du Bus Magique à Lille'); ?>
+                        <?php mkwvs_the_image($timonerie_id, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], "Timonerie de la péniche avec sa barre à roue d'origine et sa vue sur le canal"); ?>
                     </div>
                     <div class="bloc-media-text__content">
-                        <h3>Brunch du dimanche</h3>
-                        <p>Tous les dimanches de 11h à 15h, un brunch maison, bio et de saison sur la péniche : energy bowl, plat du jour, pâtisserie, jus bio, thé et café à volonté.</p>
-                        <a href="<?php echo esc_url(get_permalink($brunch)); ?>" class="cta cta--yellow" data-umami-event="brunch-entree" data-umami-event-source="accueil">Je viens bruncher !</a>
+                        <p>Le bateau s'appelait l'Île. Cette péniche citerne construite en 1954, l'association l'a choisie en février 2019, après avoir obtenu l'été précédent l'autorisation de stationner devant le Champ de Mars. De février 2019 à octobre 2020, des chantiers participatifs l'ont transformée en lieu de vie : c'est aujourd'hui la péniche associative de Lille, ouverte à toutes et à tous.</p>
+                        <a href="/notre-histoire/" class="cta cta--green" data-umami-event="peniche-activite" data-umami-event-cible="histoire">Je lis son histoire</a>
                     </div>
                 </div>
             </section>
         <?php endif; ?>
-
-        <?php $timonerie_id = mkwvs_peniche_photo_id('timonerie.jpg', "Timonerie de la péniche avec sa barre à roue d'origine et sa vue sur le canal"); ?>
-        <?php $studio_id = mkwvs_peniche_photo_id('studio-vue-ensemble.jpg', "Vue d'ensemble du studio du Marinier : kitchenette, coin bar et espace nuit"); ?>
-        <section class="section-content section-content--peniche">
-
-            <div class="bloc-media-text bloc-media-text--oval">
-                <?php if ($timonerie_id) : ?>
-                    <div class="bloc-media-text__media">
-                        <?php mkwvs_the_image($timonerie_id, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], "Timonerie de la péniche avec sa barre à roue d'origine et sa vue sur le canal"); ?>
-                    </div>
-                <?php endif; ?>
-                <div class="bloc-media-text__content">
-                    <h3>Une péniche citerne de 1954</h3>
-                    <p>Le bateau s'appelait l'Île. Cette péniche citerne construite en 1954, l'association l'a choisie en février 2019, après avoir obtenu l'été précédent l'autorisation de stationner devant le Champ de Mars. De février 2019 à octobre 2020, des chantiers participatifs l'ont transformée en lieu de vie : c'est aujourd'hui la péniche associative de Lille, ouverte à toutes et à tous.</p>
-                    <a href="/notre-histoire/" class="cta cta--green" data-umami-event="peniche-activite" data-umami-event-cible="histoire">Je lis son histoire</a>
-                </div>
-            </div>
-
-            <div class="bloc-media-text bloc-media-text--right bloc-media-text--oval bloc-media-text--tomato">
-                <?php if ($studio_id) : ?>
-                    <div class="bloc-media-text__media">
-                        <?php mkwvs_the_image($studio_id, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], "Vue d'ensemble du studio du Marinier : kitchenette, coin bar et espace nuit"); ?>
-                    </div>
-                <?php endif; ?>
-                <div class="bloc-media-text__content">
-                    <h3>Dormir sur la péniche</h3>
-                    <p>À l'arrière du bateau, le logement du Marinier, un <a href="/dormir-sur-une-peniche-a-lille/" data-umami-event="hebergement-entree" data-umami-event-source="accueil-texte">logement insolite à Lille</a>, se loue à la nuit pour deux à trois personnes, avec sa terrasse privée sur le pont et sa vue sur le canal. C'est un hébergement indépendant du bar et du restaurant.</p>
-                    <a href="/dormir-sur-une-peniche-a-lille/" class="cta cta--tomato" data-umami-event="hebergement-entree" data-umami-event-source="accueil">Je regarde les dates</a>
-                </div>
-            </div>
-
-        </section>
 
         <section class="section-content home-faq">
             <h2>Questions fréquentes</h2>
