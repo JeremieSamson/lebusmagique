@@ -279,10 +279,10 @@
 
         <section class="section-bggreen mt75">
             <?php if ($image) : ?>
-                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>">Voir la
+                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>" data-umami-event="programmation-entree" data-umami-event-source="accueil">Voir la
                     programmation en détails !</a>
             <?php elseif (have_rows('page_home_programmation_list')) : ?>
-                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>">Voir la
+                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>" data-umami-event="programmation-entree" data-umami-event-source="accueil">Voir la
                     programmation</a>
             <?php endif; ?>
         </section>
@@ -310,7 +310,7 @@
                 <div class="bloc-media-text__content">
                     <h3><?php echo $titre; ?></h3>
                     <?php echo apply_filters('the_content', $description) ?>
-                    <a href="<?php echo $link; ?>" class="cta cta--jungle-green"><?php echo $libelle; ?></a>
+                    <a href="<?php echo $link; ?>" class="cta cta--jungle-green" data-umami-event="restauration-entree" data-umami-event-source="accueil"><?php echo $libelle; ?></a>
                 </div>
             </div>
 
@@ -339,7 +339,7 @@
                 <div class="bloc-media-text__content">
                     <h3><?php echo $titre; ?></h3>
                     <?php echo apply_filters('the_content', $description) ?>
-                    <a href="<?php echo $link; ?>" class="cta cta--red"><?php echo $libelle; ?></a>
+                    <a href="<?php echo $link; ?>" class="cta cta--red" data-umami-event="coworking-entree" data-umami-event-source="accueil"><?php echo $libelle; ?></a>
                 </div>
             </div>
 
@@ -355,7 +355,7 @@
                 <div class="bloc-media-text__content">
                     <h3><?php echo $titre; ?></h3>
                     <?php echo apply_filters('the_content', $description) ?>
-                    <a href="<?php echo $link; ?>" class="cta cta--green"><?php echo $libelle; ?></a>
+                    <a href="<?php echo $link; ?>" class="cta cta--green" data-umami-event="location-entree" data-umami-event-source="accueil"><?php echo $libelle; ?></a>
                 </div>
             </div>
 
