@@ -21,40 +21,32 @@
             transform: scale(2);
         }
 
-        .bloc-media-text--brunch .bloc-media-text__media {
-            flex: 0 0 48%;
-            display: flex;
-            justify-content: center;
-        }
-
-        .bloc-media-text--brunch .bloc-media-text__media img {
-            width: min(85%, 380px);
-            height: auto;
-            aspect-ratio: 4 / 5;
-            object-fit: cover;
-            border: 16px solid #ffd202;
-            border-radius: 50%;
-        }
-
-        @media screen and (min-width: 1024px) {
-            .bloc-media-text--brunch .bloc-media-text__media img {
-                width: 340px;
-            }
-        }
-
+        /* Hublots : les encarts sont des PNG ronds (hublot dessiné à ~69 % de la
+           largeur de l'image), les photos ajoutées sont des cercles du même diamètre. */
+        .section-content--beige .bloc-media-text__media,
         .bloc-media-text--oval .bloc-media-text__media {
             flex: 0 0 48%;
             display: flex;
             justify-content: center;
         }
 
-        .bloc-media-text--oval .bloc-media-text__media img {
-            width: min(85%, 380px);
+        .section-content--beige .bloc-media-text__media img {
+            width: 100%;
             height: auto;
-            aspect-ratio: 4 / 5;
+        }
+
+        .bloc-media-text--brunch .bloc-media-text__media img,
+        .bloc-media-text--oval .bloc-media-text__media img {
+            width: 69%;
+            height: auto;
+            aspect-ratio: 1;
             object-fit: cover;
             border: 16px solid #9bb909;
             border-radius: 50%;
+        }
+
+        .bloc-media-text--brunch .bloc-media-text__media img {
+            border-color: #ffd202;
         }
 
         .bloc-media-text--tomato .bloc-media-text__media img {
@@ -65,11 +57,6 @@
             padding-top: 20px;
         }
 
-        @media screen and (min-width: 1024px) {
-            .bloc-media-text--oval .bloc-media-text__media img {
-                width: 340px;
-            }
-        }
 
         .bloc-fullwidth a {
             display: block;
@@ -495,18 +482,42 @@
                     }
                     d += (drawing ? ' L' : ' M') + first[0] + ' ' + first[1];
 
-                    for (var k = 1; k < centers.length; k++) {
-                        var mid = (centers[k - 1][1] + centers[k][1]) / 2;
-                        d += ' C' + centers[k - 1][0] + ' ' + mid + ' ' + centers[k][0] + ' ' + mid + ' ' + centers[k][0] + ' ' + centers[k][1];
-                    }
+                    // Entre deux photos, le fil sort par le bas, traverse dans l'espace vide
+                    // entre les deux blocs (sans toucher textes ni boutons), puis plonge dans
+                    // la photo suivante. Une spline de Catmull-Rom arrondit tous les virages.
+                    var blocks = section.querySelectorAll('.bloc-media-text');
+                    var stops = [];
+                    centers.forEach(function (c, n) {
+                        if (n > 0) {
+                            var prev = centers[n - 1];
+                            var gap = (blocks[n - 1].getBoundingClientRect().bottom + blocks[n].getBoundingClientRect().top) / 2 - box.top;
+                            var dx = c[0] - prev[0];
+                            stops.push([prev[0] + dx * 0.12, gap - 12]);
+                            stops.push([prev[0] + dx * 0.88, gap + 12]);
+                        }
+                        stops.push([c[0], c[1]]);
+                    });
 
                     var map = section.querySelector('.bloc-fullwidth');
                     if (map) {
                         var m = map.getBoundingClientRect();
-                        var last = centers[centers.length - 1];
-                        var end2 = [m.left - box.left + m.width / 2, m.top - box.top + 20];
-                        var mid2 = (last[1] + end2[1]) / 2;
-                        d += ' C' + last[0] + ' ' + mid2 + ' ' + end2[0] + ' ' + mid2 + ' ' + end2[0] + ' ' + end2[1];
+                        var lastCenter = centers[centers.length - 1];
+                        var lastGap = (blocks[blocks.length - 1].getBoundingClientRect().bottom + m.top) / 2 - box.top;
+                        var mapX = m.left - box.left + m.width / 2;
+                        var lastDx = mapX - lastCenter[0];
+                        stops.push([lastCenter[0] + lastDx * 0.12, lastGap - 8]);
+                        stops.push([lastCenter[0] + lastDx * 0.88, lastGap + 8]);
+                        stops.push([mapX, m.top - box.top + 20]);
+                    }
+
+                    for (var k = 0; k < stops.length - 1; k++) {
+                        var p0 = stops[k - 1] || stops[k];
+                        var p1 = stops[k];
+                        var p2 = stops[k + 1];
+                        var p3 = stops[k + 2] || p2;
+                        d += ' C' + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + ' ' + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)
+                            + ' ' + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + ' ' + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)
+                            + ' ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
                     }
 
                     svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
