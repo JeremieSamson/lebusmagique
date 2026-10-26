@@ -29,7 +29,6 @@
             object-fit: cover;
             border: 16px solid #ffd202;
             border-radius: 50%;
-            transform: rotate(-8deg);
         }
 
         @media screen and (min-width: 1024px) {
@@ -143,6 +142,7 @@
         }
 
         .home-thread {
+            display: none;
             position: absolute;
             top: 0;
             left: 0;
@@ -156,9 +156,14 @@
         .home-thread path {
             fill: none;
             stroke: #161615;
-            stroke-width: 2.5;
-            stroke-dasharray: 12 10;
             stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        @media screen and (min-width: 1024px) {
+            .home-thread {
+                display: block;
+            }
         }
 
         .section-content--beige > *:not(.home-thread) {
@@ -385,8 +390,7 @@
 
                 function draw() {
                     var box = section.getBoundingClientRect();
-                    var title = section.querySelector('h2').getBoundingClientRect();
-                    var points = [[title.right - box.left + 30, title.top - box.top + title.height / 2]];
+                    var points = [];
 
                     section.querySelectorAll('.bloc-media-text__media').forEach(function (media) {
                         var r = media.getBoundingClientRect();
@@ -399,14 +403,24 @@
                         points.push([m.left - box.left + m.width / 2, m.top - box.top + 20]);
                     }
 
+                    if (points.length < 2) {
+                        return;
+                    }
+
                     var d = 'M' + points[0].join(' ');
                     for (var i = 1; i < points.length; i++) {
                         var mid = (points[i - 1][1] + points[i][1]) / 2;
                         d += ' C' + points[i - 1][0] + ' ' + mid + ' ' + points[i][0] + ' ' + mid + ' ' + points[i].join(' ');
                     }
 
+                    // Même échelle que le zigzag d'origine : un SVG de 2173,689 px de large
+                    // (trait de 6, tirets de 30) étiré sur toute la largeur de l'écran.
+                    var scale = document.documentElement.clientWidth / 2173.689;
+                    var path = svg.firstElementChild;
                     svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
-                    svg.firstElementChild.setAttribute('d', d);
+                    path.setAttribute('d', d);
+                    path.setAttribute('stroke-width', (6 * scale).toFixed(2));
+                    path.setAttribute('stroke-dasharray', (30 * scale).toFixed(2));
                 }
 
                 draw();
