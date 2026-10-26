@@ -9,9 +9,7 @@
         .home-prog__poster {
             display: block;
             width: 100%;
-            max-width: 520px;
             height: auto;
-            margin: 0 auto;
             cursor: zoom-in;
             transition: transform 0.3s ease;
         }
@@ -21,64 +19,6 @@
             z-index: 2;
             cursor: zoom-out;
             transform: scale(2);
-        }
-
-        .home-prog__next {
-            position: relative;
-            margin-top: 40px;
-            padding: 20px;
-            background: #f8f4e8;
-        }
-
-        .home-prog__next h3 {
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .home-prog__next ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .home-prog__next li {
-            border-bottom: 2px dashed #000;
-        }
-
-        .home-prog__next a {
-            display: block;
-            padding: 12px 0;
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .home-prog__next a:hover .home-prog__title,
-        .home-prog__next a:focus-visible .home-prog__title {
-            text-decoration: underline;
-        }
-
-        .home-prog__date {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #ec6620;
-        }
-
-        .home-prog__title {
-            display: block;
-            font-weight: 600;
-        }
-
-        @media screen and (min-width: 768px) {
-            .home-prog__next ul {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                column-gap: 40px;
-            }
-
-            .home-prog__date {
-                font-size: 14px;
-            }
         }
 
         .bloc-media-text--brunch .bloc-media-text__media {
@@ -329,30 +269,14 @@
             <h2>Prog' du mois</h2>
             <?php $image = get_field('programmation_du_mois', $hp->ID); ?>
             <?php if (isset($image) && is_array($image)) : ?>
-                <?php $next_events = function_exists('mkwvs_upcoming_events') ? mkwvs_upcoming_events([], 6) : []; ?>
                 <div class="home-prog">
                     <?php mkwvs_the_image($image, 'full', [
                         'class'                    => 'home-prog__poster',
-                        'sizes'                    => '(max-width: 767px) 100vw, 520px',
+                        'sizes'                    => '(max-width: 900px) 100vw, 900px',
                         'onclick'                  => "this.classList.toggle('zoomed')",
                         'data-umami-event'         => 'programmation-affiche',
                         'data-umami-event-source'  => 'accueil',
                     ], 'Programmation du mois du Bus Magique'); ?>
-                    <?php if (!empty($next_events)) : ?>
-                        <div class="home-prog__next">
-                            <h3>Les prochains rendez-vous</h3>
-                            <ul>
-                                <?php foreach ($next_events as $event) : ?>
-                                    <li>
-                                        <a href="<?php echo esc_url(get_permalink($event)); ?>" data-umami-event="evenement-entree" data-umami-event-source="accueil">
-                                            <span class="home-prog__date"><?php echo esc_html(mkwvs_event_date_label($event->ID)); ?></span>
-                                            <span class="home-prog__title"><?php echo esc_html(get_the_title($event)); ?></span>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
                 </div>
             <?php elseif (have_rows('page_home_programmation_list')) : ?>
                 <div class="events">
