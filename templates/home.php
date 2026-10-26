@@ -525,21 +525,37 @@
 
                         stops.push([from[0] + dx * random(0.06, 0.16), line(0.8)]);
 
-                        var lx = from[0] + dx * random(0.42, 0.58);
-                        var ly = line(0.5);
-                        var above = ly - Math.max(edge(prevBlock, true, lx - 50, lx + 50), from[1]) - 10;
-                        var below = Math.min(edge(nextBlock, false, lx - 50, lx + 50), to[1]) - 10 - ly;
-                        var up = above > below ? -1 : 1;
-                        var r = Math.min(random(26, 40), Math.max(above, below) / 2);
-                        if (r >= 18 && random(0, 1) < 0.8) {
-                            stops.push([lx - dir * r * 1.2, ly]);
-                            for (var a = 1; a < 8; a++) {
-                                stops.push([lx + dir * r * Math.sin(a * Math.PI / 4), ly + up * r * (1 - Math.cos(a * Math.PI / 4))]);
+                        // La boucle se pose là où il y a le plus de place, avec un départ
+                        // tiré au hasard pour que les traversées ne se ressemblent pas.
+                        var ly = line(0.6);
+                        var best = null;
+                        var offset = random(0, 0.08);
+                        for (var t = 0.3 + offset; t <= 0.72; t += 0.08) {
+                            var cx = from[0] + dx * t;
+                            var above = ly - Math.max(edge(prevBlock, true, cx - 50, cx + 50), from[1]) - 10;
+                            var below = Math.min(edge(nextBlock, false, cx - 50, cx + 50), to[1]) - 10 - ly;
+                            var room = Math.max(above, below) * random(0.85, 1);
+                            if (!best || room > best.room) {
+                                best = {t: t, x: cx, room: room, up: above > below ? -1 : 1};
                             }
-                            stops.push([lx + dir * r * 1.2, ly]);
+                        }
+
+                        var r = Math.min(random(22, 40), best.room / 2);
+                        if (r >= 12) {
+                            if (best.t > 0.45 && random(0, 1) < 0.5) {
+                                stops.push([from[0] + dx * best.t * 0.55, line(1)]);
+                            }
+                            stops.push([best.x - dir * r * 1.2, ly]);
+                            for (var a = 1; a < 8; a++) {
+                                stops.push([best.x + dir * r * Math.sin(a * Math.PI / 4), ly + best.up * r * (1 - Math.cos(a * Math.PI / 4))]);
+                            }
+                            stops.push([best.x + dir * r * 1.2, ly]);
+                            if (best.t < 0.55 && random(0, 1) < 0.5) {
+                                stops.push([from[0] + dx * (best.t + (1 - best.t) * 0.5), line(1)]);
+                            }
                         } else {
-                            stops.push([from[0] + dx * random(0.3, 0.4), line(0.9)]);
-                            stops.push([from[0] + dx * random(0.6, 0.7), line(0.9)]);
+                            stops.push([from[0] + dx * random(0.3, 0.4), line(1)]);
+                            stops.push([from[0] + dx * random(0.6, 0.7), line(1)]);
                         }
 
                         stops.push([from[0] + dx * random(0.84, 0.94), line(0.8)]);
