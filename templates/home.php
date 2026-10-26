@@ -484,30 +484,80 @@
 
                     // Entre deux photos, le fil sort par le bas, traverse dans l'espace vide
                     // entre les deux blocs (sans toucher textes ni boutons), puis plonge dans
-                    // la photo suivante. Une spline de Catmull-Rom arrondit tous les virages.
-                    var blocks = section.querySelectorAll('.bloc-media-text');
+                    // la photo suivante. En chemin il fait une boucle ou ondule, au hasard
+                    // mais toujours de la même façon (graine fixe), pour que le tracé ne
+                    // change pas d'une visite à l'autre. Une spline de Catmull-Rom arrondit
+                    // tous les virages.
+                    var seed = 1954;
+                    function random(min, max) {
+                        seed = (seed * 16807) % 2147483647;
+                        return min + (seed / 2147483647) * (max - min);
+                    }
+
+                    // Les blocs se touchent : l'espace libre se mesure sur leur contenu,
+                    // à l'aplomb de [x1, x2].
+                    function edge(block, bottom, x1, x2) {
+                        var y = bottom ? -Infinity : Infinity;
+                        block.querySelectorAll('h3, p, a, img').forEach(function (el) {
+                            var r = el.getBoundingClientRect();
+                            if (r.right - box.left < x1 || r.left - box.left > x2) {
+                                return;
+                            }
+                            y = bottom ? Math.max(y, r.bottom) : Math.min(y, r.top);
+                        });
+                        return y - box.top;
+                    }
+
+                    // Le fil traverse dans la bande libre entre les deux blocs. La boucle
+                    // part de ce fil et déborde du côté où il reste de la place, souvent
+                    // dans l'allée entre les colonnes.
                     var stops = [];
-                    centers.forEach(function (c, n) {
-                        if (n > 0) {
-                            var prev = centers[n - 1];
-                            var gap = (blocks[n - 1].getBoundingClientRect().bottom + blocks[n].getBoundingClientRect().top) / 2 - box.top;
-                            var dx = c[0] - prev[0];
-                            stops.push([prev[0] + dx * 0.12, gap - 12]);
-                            stops.push([prev[0] + dx * 0.88, gap + 12]);
+                    function wander(from, to, prevBlock, nextBlock) {
+                        var dx = to[0] - from[0];
+                        var dir = dx < 0 ? -1 : 1;
+                        var x1 = Math.min(from[0], to[0]);
+                        var x2 = Math.max(from[0], to[0]);
+                        var top = Math.max(edge(prevBlock, true, x1, x2), from[1]) + 10;
+                        var bottom = Math.min(edge(nextBlock, false, x1, x2), to[1]) - 10;
+                        function line(spread) {
+                            return (top + bottom) / 2 + Math.max(0, bottom - top) / 2 * random(-spread, spread);
                         }
-                        stops.push([c[0], c[1]]);
-                    });
+
+                        stops.push([from[0] + dx * random(0.06, 0.16), line(0.8)]);
+
+                        var lx = from[0] + dx * random(0.42, 0.58);
+                        var ly = line(0.5);
+                        var above = ly - Math.max(edge(prevBlock, true, lx - 50, lx + 50), from[1]) - 10;
+                        var below = Math.min(edge(nextBlock, false, lx - 50, lx + 50), to[1]) - 10 - ly;
+                        var up = above > below ? -1 : 1;
+                        var r = Math.min(random(26, 40), Math.max(above, below) / 2);
+                        if (r >= 18 && random(0, 1) < 0.8) {
+                            stops.push([lx - dir * r * 1.2, ly]);
+                            for (var a = 1; a < 8; a++) {
+                                stops.push([lx + dir * r * Math.sin(a * Math.PI / 4), ly + up * r * (1 - Math.cos(a * Math.PI / 4))]);
+                            }
+                            stops.push([lx + dir * r * 1.2, ly]);
+                        } else {
+                            stops.push([from[0] + dx * random(0.3, 0.4), line(0.9)]);
+                            stops.push([from[0] + dx * random(0.6, 0.7), line(0.9)]);
+                        }
+
+                        stops.push([from[0] + dx * random(0.84, 0.94), line(0.8)]);
+                        stops.push(to);
+                    }
+
+                    var blocks = section.querySelectorAll('.bloc-media-text');
+                    stops.push([first[0], first[1]]);
+                    for (var n = 1; n < centers.length; n++) {
+                        wander(centers[n - 1], centers[n], blocks[n - 1], blocks[n]);
+                    }
 
                     var map = section.querySelector('.bloc-fullwidth');
                     if (map) {
                         var m = map.getBoundingClientRect();
-                        var lastCenter = centers[centers.length - 1];
-                        var lastGap = (blocks[blocks.length - 1].getBoundingClientRect().bottom + m.top) / 2 - box.top;
-                        var mapX = m.left - box.left + m.width / 2;
-                        var lastDx = mapX - lastCenter[0];
-                        stops.push([lastCenter[0] + lastDx * 0.12, lastGap - 8]);
-                        stops.push([lastCenter[0] + lastDx * 0.88, lastGap + 8]);
-                        stops.push([mapX, m.top - box.top + 20]);
+                        var last = centers[centers.length - 1];
+                        var other = centers.length > 1 ? centers[centers.length - 2][0] : m.left - box.left + m.width / 2;
+                        wander(last, [other, m.top - box.top + 20], blocks[blocks.length - 1], map);
                     }
 
                     for (var k = 0; k < stops.length - 1; k++) {
