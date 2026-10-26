@@ -517,48 +517,75 @@
                         var dir = dx < 0 ? -1 : 1;
                         var x1 = Math.min(from[0], to[0]);
                         var x2 = Math.max(from[0], to[0]);
-                        var top = Math.max(edge(prevBlock, true, x1, x2), from[1]) + 10;
-                        var bottom = Math.min(edge(nextBlock, false, x1, x2), to[1]) - 10;
+                        var top = Math.max(edge(prevBlock, true, x1, x2), from[1]) + 18;
+                        var bottom = Math.min(edge(nextBlock, false, x1, x2), to[1]) - 22;
                         function line(spread) {
                             return (top + bottom) / 2 + Math.max(0, bottom - top) / 2 * random(-spread, spread);
                         }
 
-                        stops.push([from[0] + dx * random(0.06, 0.16), line(0.8)]);
+                        // Le fil avance toujours dans le même sens : un point qui ne
+                        // s'éloigne pas assez du précédent ferait une pointe, on le saute.
+                        var fixed = stops.length;
+                        function pass(x, y) {
+                            if (stops.length <= fixed || (x - stops[stops.length - 1][0]) * dir >= 50) {
+                                stops.push([x, y]);
+                            }
+                        }
 
-                        // La boucle se pose là où il y a le plus de place, avec un départ
-                        // tiré au hasard pour que les traversées ne se ressemblent pas.
-                        var ly = line(0.6);
-                        var best = null;
-                        var offset = random(0, 0.08);
-                        for (var t = 0.3 + offset; t <= 0.72; t += 0.08) {
+                        pass(from[0] + dx * random(0.06, 0.16), top + Math.max(0, bottom - top) * random(0, 0.35));
+
+                        // Une ou deux boucles, posées au hasard parmi les endroits où il y a
+                        // la place, de taille et de forme variables, au-dessus ou en dessous
+                        // du fil. Chacune prend toute la hauteur libre à son aplomb.
+                        var spots = [];
+                        for (var t = 0.28; t <= 0.72; t += 0.04) {
                             var cx = from[0] + dx * t;
-                            var above = ly - Math.max(edge(prevBlock, true, cx - 50, cx + 50), from[1]) - 10;
-                            var below = Math.min(edge(nextBlock, false, cx - 50, cx + 50), to[1]) - 10 - ly;
-                            var room = Math.max(above, below) * random(0.85, 1);
-                            if (!best || room > best.room) {
-                                best = {t: t, x: cx, room: room, up: above > below ? -1 : 1};
+                            var high = Math.max(edge(prevBlock, true, cx - 110, cx + 110), from[1]) + 16;
+                            var low = Math.min(edge(nextBlock, false, cx - 110, cx + 110), to[1]) - 20;
+                            if (low - high >= 56) {
+                                spots.push({x: cx, high: high, low: low});
                             }
                         }
 
-                        var r = Math.min(random(22, 40), best.room / 2);
-                        if (r >= 12) {
-                            if (best.t > 0.45 && random(0, 1) < 0.5) {
-                                stops.push([from[0] + dx * best.t * 0.55, line(1)]);
+                        var loops = [];
+                        var wanted = random(0, 1) < 0.35 ? 2 : 1;
+                        while (spots.length && loops.length < wanted) {
+                            var spot = spots.splice(Math.floor(random(0, spots.length)), 1)[0];
+                            spots = spots.filter(function (s) {
+                                return Math.abs(s.x - spot.x) > 200;
+                            });
+                            loops.push(spot);
+                        }
+                        loops.sort(function (l1, l2) {
+                            return (l1.x - l2.x) * dir;
+                        });
+
+                        if (!loops.length) {
+                            pass(from[0] + dx * random(0.3, 0.4), line(1));
+                            pass(from[0] + dx * random(0.6, 0.7), line(1));
+                        }
+
+                        loops.forEach(function (spot) {
+                            var ry = random(0.32, 0.5) * Math.min(spot.low - spot.high, 100);
+                            var rx = Math.min(ry * random(0.8, 1.4), 48);
+                            var up = random(0, 1) < 0.5 ? -1 : 1;
+                            var y0 = up > 0 ? spot.high + random(0, spot.low - spot.high - 2 * ry) : spot.low - random(0, spot.low - spot.high - 2 * ry);
+
+                            while (stops.length > fixed && (spot.x - dir * rx * 1.4 - stops[stops.length - 1][0]) * dir < 50) {
+                                stops.pop();
                             }
-                            stops.push([best.x - dir * r * 1.2, ly]);
+                            stops.push([spot.x - dir * rx * 1.4, y0]);
                             for (var a = 1; a < 8; a++) {
-                                stops.push([best.x + dir * r * Math.sin(a * Math.PI / 4), ly + best.up * r * (1 - Math.cos(a * Math.PI / 4))]);
+                                stops.push([spot.x + dir * rx * Math.sin(a * Math.PI / 4), y0 + up * ry * (1 - Math.cos(a * Math.PI / 4))]);
                             }
-                            stops.push([best.x + dir * r * 1.2, ly]);
-                            if (best.t < 0.55 && random(0, 1) < 0.5) {
-                                stops.push([from[0] + dx * (best.t + (1 - best.t) * 0.5), line(1)]);
-                            }
-                        } else {
-                            stops.push([from[0] + dx * random(0.3, 0.4), line(1)]);
-                            stops.push([from[0] + dx * random(0.6, 0.7), line(1)]);
-                        }
+                            stops.push([spot.x + dir * rx * 1.4, y0]);
+                            fixed = stops.length;
+                        });
 
-                        stops.push([from[0] + dx * random(0.84, 0.94), line(0.8)]);
+                        pass(from[0] + dx * random(0.84, 0.94), Math.max(stops[stops.length - 1][1] + 10, top + Math.max(0, bottom - top) * random(0.65, 1)));
+                        while (stops.length > fixed && (to[0] - stops[stops.length - 1][0]) * dir < 40) {
+                            stops.pop();
+                        }
                         stops.push(to);
                     }
 
