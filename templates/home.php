@@ -134,6 +134,38 @@
             margin: 0 0 18px;
         }
 
+        .section-content--beige {
+            position: relative;
+        }
+
+        body.home .section-content--beige:before {
+            display: none;
+        }
+
+        .home-thread {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .home-thread path {
+            fill: none;
+            stroke: #161615;
+            stroke-width: 2.5;
+            stroke-dasharray: 12 10;
+            stroke-linecap: round;
+        }
+
+        .section-content--beige > *:not(.home-thread) {
+            position: relative;
+            z-index: 1;
+        }
+
         .home-access li,
         .home-faq summary {
             font-size: 12px;
@@ -257,6 +289,8 @@
         <?php $studio_id = mkwvs_peniche_photo_id('studio-vue-ensemble.jpg', "Vue d'ensemble du studio du Marinier : kitchenette, coin bar et espace nuit"); ?>
         <section class="section-content section-content--beige">
 
+            <svg class="home-thread" aria-hidden="true" focusable="false"><path d=""/></svg>
+
             <h2>Que faire à bord Capitaine ?</h2>
 
             <?php $image = get_field('page_home_encart_1_image', $hp->ID); ?>
@@ -340,6 +374,50 @@
             </div>
 
         </section>
+
+        <script>
+            (function () {
+                var section = document.querySelector('.section-content--beige');
+                var svg = section && section.querySelector('.home-thread');
+                if (!svg) {
+                    return;
+                }
+
+                function draw() {
+                    var box = section.getBoundingClientRect();
+                    var title = section.querySelector('h2').getBoundingClientRect();
+                    var points = [[title.right - box.left + 30, title.top - box.top + title.height / 2]];
+
+                    section.querySelectorAll('.bloc-media-text__media').forEach(function (media) {
+                        var r = media.getBoundingClientRect();
+                        points.push([r.left - box.left + r.width / 2, r.top - box.top + r.height / 2]);
+                    });
+
+                    var map = section.querySelector('.bloc-fullwidth');
+                    if (map) {
+                        var m = map.getBoundingClientRect();
+                        points.push([m.left - box.left + m.width / 2, m.top - box.top + 20]);
+                    }
+
+                    var d = 'M' + points[0].join(' ');
+                    for (var i = 1; i < points.length; i++) {
+                        var mid = (points[i - 1][1] + points[i][1]) / 2;
+                        d += ' C' + points[i - 1][0] + ' ' + mid + ' ' + points[i][0] + ' ' + mid + ' ' + points[i].join(' ');
+                    }
+
+                    svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
+                    svg.firstElementChild.setAttribute('d', d);
+                }
+
+                draw();
+                window.addEventListener('load', draw);
+                if ('ResizeObserver' in window) {
+                    new ResizeObserver(draw).observe(section);
+                } else {
+                    window.addEventListener('resize', draw);
+                }
+            })();
+        </script>
 
         <section class="section-content home-access">
             <h2>Où est amarrée la péniche ?</h2>
