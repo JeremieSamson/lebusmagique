@@ -383,52 +383,140 @@
         <script>
             (function () {
                 var section = document.querySelector('.section-content--beige');
+                var prog = document.querySelector('.section-content--prog');
                 var svg = section && section.querySelector('.home-thread');
-                if (!svg) {
+                if (!svg || !prog) {
                     return;
                 }
 
-                function draw() {
-                    var box = section.getBoundingClientRect();
+                // Tracé de images/zigzag.svg, le fond de la section programmation qui
+                // déborde jusqu'ici. Au-delà du bandeau vert, on le redessine pour
+                // l'arrêter derrière la première photo et enchaîner sur le fil.
+                var ZIGZAG = {
+                    width: 2173.689,
+                    height: 2244.023,
+                    d: 'M-1525.246-1018.092s508.292-57.274 675.206 297.847 367.21 235.9 528.56 273.949c76.066 17.937 106.449 102.629 139.361 158.819 52.742 90.048 124.638 161.183 234.357 192.246 80.683 22.843 162.516 11.278 236.992 53.237 63.955 36.031 117.559 82.66 148.587 146.136 62.853 128.584 25.172 298.7-73.06 404.976-142.942 154.644-394.3 131.7-578.255 69.055-65.572-22.331-222.9-84.276-290.6-98.541-124.307-26.192-161.039 7.881-289.4 32.638-145.856 28.131-300.278 100.189-353.561 235.772-44.864 106.965-20.654 216.788 48.052 278.915 114.378 76.912 304.322-57.528 426.795-100.611 144.9-12.677 123.55 2.347 290.465 37.859',
+                    rotate: [5.13, -12382.947, 19127.147]
+                };
+
+                var ns = 'http://www.w3.org/2000/svg';
+                var path = svg.querySelector('path');
+                var zigzag = document.createElementNS(ns, 'path');
+                zigzag.setAttribute('d', ZIGZAG.d);
+                zigzag.setAttribute('transform', 'rotate(' + ZIGZAG.rotate.join(' ') + ')');
+                zigzag.style.display = 'none';
+                svg.appendChild(zigzag);
+
+                var clipStyle = document.createElement('style');
+                document.head.appendChild(clipStyle);
+                var desktop = window.matchMedia('(min-width: 1024px)');
+
+                function zigzagPoints(box, scale) {
+                    var origin = prog.getBoundingClientRect();
+                    var width = document.documentElement.clientWidth;
+                    var x0 = (width - ZIGZAG.width * scale) / 2;
+                    var y0 = origin.top + origin.height * 1.3 - ZIGZAG.height * scale;
+                    var matrix = zigzag.transform.baseVal.consolidate().matrix;
+                    var length = zigzag.getTotalLength();
+                    var step = 2 / scale;
                     var points = [];
 
+                    for (var l = 0; l <= length; l += step) {
+                        var p = zigzag.getPointAtLength(l).matrixTransform(matrix);
+                        points.push([x0 + p.x * scale - box.left, y0 + p.y * scale - box.top]);
+                    }
+
+                    return points;
+                }
+
+                function update() {
+                    if (!desktop.matches) {
+                        clipStyle.textContent = '';
+                        return;
+                    }
+
+                    var box = section.getBoundingClientRect();
+                    var origin = prog.getBoundingClientRect();
+                    var scale = Math.min(document.documentElement.clientWidth / ZIGZAG.width, origin.height * 1.3 / ZIGZAG.height);
+
+                    var centers = [];
                     section.querySelectorAll('.bloc-media-text__media').forEach(function (media) {
                         var r = media.getBoundingClientRect();
-                        points.push([r.left - box.left + r.width / 2, r.top - box.top + r.height / 2]);
+                        centers.push([r.left - box.left + r.width / 2, r.top - box.top + r.height / 2, r.width / 2, r.height / 2]);
                     });
+                    if (!centers.length) {
+                        return;
+                    }
+
+                    // Partie visible du zigzag : tout ce qui passe sous le bandeau vert,
+                    // jusqu'à son entrée dans la première photo (ou son point le plus proche).
+                    var first = centers[0];
+                    var all = zigzagPoints(box, scale);
+                    var end = -1;
+                    var closest = -1;
+                    var best = Infinity;
+                    for (var i = 0; i < all.length; i++) {
+                        if (all[i][1] < 0) {
+                            continue;
+                        }
+                        var dx = (all[i][0] - first[0]) / first[2];
+                        var dy = (all[i][1] - first[1]) / first[3];
+                        var dist = dx * dx + dy * dy;
+                        if (dist <= 1) {
+                            end = i;
+                            break;
+                        }
+                        if (dist < best) {
+                            best = dist;
+                            closest = i;
+                        }
+                    }
+                    if (end < 0) {
+                        end = closest;
+                    }
+
+                    var d = '';
+                    var drawing = false;
+                    for (var j = 0; j <= end; j++) {
+                        if (all[j][1] < 0) {
+                            drawing = false;
+                            continue;
+                        }
+                        d += (drawing ? ' L' : ' M') + all[j][0].toFixed(1) + ' ' + all[j][1].toFixed(1);
+                        drawing = true;
+                    }
+                    d += (drawing ? ' L' : ' M') + first[0] + ' ' + first[1];
+
+                    for (var k = 1; k < centers.length; k++) {
+                        var mid = (centers[k - 1][1] + centers[k][1]) / 2;
+                        d += ' C' + centers[k - 1][0] + ' ' + mid + ' ' + centers[k][0] + ' ' + mid + ' ' + centers[k][0] + ' ' + centers[k][1];
+                    }
 
                     var map = section.querySelector('.bloc-fullwidth');
                     if (map) {
                         var m = map.getBoundingClientRect();
-                        points.push([m.left - box.left + m.width / 2, m.top - box.top + 20]);
+                        var last = centers[centers.length - 1];
+                        var end2 = [m.left - box.left + m.width / 2, m.top - box.top + 20];
+                        var mid2 = (last[1] + end2[1]) / 2;
+                        d += ' C' + last[0] + ' ' + mid2 + ' ' + end2[0] + ' ' + mid2 + ' ' + end2[0] + ' ' + end2[1];
                     }
 
-                    if (points.length < 2) {
-                        return;
-                    }
-
-                    var d = 'M' + points[0].join(' ');
-                    for (var i = 1; i < points.length; i++) {
-                        var mid = (points[i - 1][1] + points[i][1]) / 2;
-                        d += ' C' + points[i - 1][0] + ' ' + mid + ' ' + points[i][0] + ' ' + mid + ' ' + points[i].join(' ');
-                    }
-
-                    // Même échelle que le zigzag d'origine : un SVG de 2173,689 px de large
-                    // (trait de 6, tirets de 30) étiré sur toute la largeur de l'écran.
-                    var scale = document.documentElement.clientWidth / 2173.689;
-                    var path = svg.firstElementChild;
                     svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
                     path.setAttribute('d', d);
                     path.setAttribute('stroke-width', (6 * scale).toFixed(2));
                     path.setAttribute('stroke-dasharray', (30 * scale).toFixed(2));
+
+                    var hidden = Math.max(0, origin.top + origin.height * 1.3 - box.top);
+                    clipStyle.textContent = 'body.home .section-content--prog:before{clip-path:inset(0 0 ' + hidden + 'px 0)}';
                 }
 
-                draw();
-                window.addEventListener('load', draw);
+                update();
+                window.addEventListener('load', update);
+                desktop.addEventListener('change', update);
                 if ('ResizeObserver' in window) {
-                    new ResizeObserver(draw).observe(section);
+                    new ResizeObserver(update).observe(section);
                 } else {
-                    window.addEventListener('resize', draw);
+                    window.addEventListener('resize', update);
                 }
             })();
         </script>
