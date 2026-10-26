@@ -174,10 +174,11 @@ function mkwvs_schema_inject_global(): void
     $data = mkwvs_schema_get_common_data();
 
     if (is_front_page() || is_home()) {
-        $schema = mkwvs_schema_build_base($data, 'LocalBusiness');
+        $schema = mkwvs_schema_build_base($data, ['LocalBusiness', 'TouristAttraction']);
         $schema['description'] = get_bloginfo('description')
             ?: "Péniche associative à Lille : restaurant, bar, programmation culturelle, coworking et privatisation.";
         $schema['priceRange'] = '€€';
+        $schema['hasMap'] = 'https://www.google.com/maps/search/?api=1&query=Le+Bus+Magique%2C+avenue+Cuvier%2C+59800+Lille';
         if ($data['hours']) {
             $hours = mkwvs_schema_parse_opening_hours($data['hours']);
             if (!empty($hours)) {
@@ -345,7 +346,7 @@ function mkwvs_schema_inject_page_specific(): void
         }
     }
 
-    if ($template === 'templates/peniche-lille.php') {
+    if (in_array($template, ['templates/peniche-lille.php', 'templates/home.php'], true)) {
         $faq = [
             '@context' => 'https://schema.org',
             '@type' => 'FAQPage',
@@ -371,7 +372,7 @@ function mkwvs_schema_inject_page_specific(): void
                     'name' => "Faut-il adhérer à l'association pour monter à bord ?",
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text' => "Oui. Le Bus Magique est une association, l'adhésion est donc nécessaire. Son montant est libre et elle se prend directement à bord auprès d'un bénévole ou d'un serveur.",
+                        'text' => "Oui. Le Bus Magique est une association loi 1901 née au printemps 2018, qui vit grâce à ses bénévoles et à ses adhérents : l'adhésion est donc nécessaire. Son montant est libre, c'est vous qui décidez, et elle se prend directement à bord auprès d'un bénévole ou d'un serveur.",
                     ],
                 ],
                 [

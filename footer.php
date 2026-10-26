@@ -2,7 +2,7 @@
 
 <footer class="footer-adhesion">
   <h2 class="accroche">Envie de monter à bord ?</h2>
-  <a href="<?php echo get_permalink(get_page_by_path('monter-a-bord')) ?>" class="cta cta-footer cta-decoration">J'adhère !
+  <a href="<?php echo get_permalink(get_page_by_path('monter-a-bord')) ?>" class="cta cta-footer cta-decoration" data-umami-event="adhesion-entree" data-umami-event-source="footer">J'adhère !
     <img class="cta-responsive-decoration" src="<?php echo get_stylesheet_directory_uri() . '/images/Groupe 396.svg'; ?>" alt="" aria-hidden="true">
   </a>
   <!-- <img class="cta-decoration" src="<?php echo get_stylesheet_directory_uri() . '/images/footer-cta-decoration.png'; ?>"> -->

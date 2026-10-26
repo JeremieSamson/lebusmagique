@@ -49,6 +49,7 @@ require get_template_directory() . '/inc/hebergement-calendar.php';
 require get_template_directory() . '/inc/migrate-hebergement-page.php';
 require get_template_directory() . '/inc/migrate-menu-hebergement.php';
 require get_template_directory() . '/inc/migrate-peniche-page.php';
+require get_template_directory() . '/inc/migrate-peniche-merge.php';
 require get_template_directory() . '/inc/migrate-brunch-page.php';
 require get_template_directory() . '/inc/migrate-brunch-links.php';
 require get_template_directory() . '/inc/migrate-hebergement-seo.php';

@@ -6,39 +6,178 @@
 <?php get_header(); ?>
 
     <style>
-        .zoomable {
+        .home-prog__poster {
+            display: block;
+            width: 100%;
+            height: auto;
             cursor: zoom-in;
             transition: transform 0.3s ease;
         }
 
-        .zoomable.zoomed {
+        .home-prog__poster.zoomed {
+            position: relative;
+            z-index: 2;
             cursor: zoom-out;
             transform: scale(2);
         }
 
-        .bloc-media-text--brunch .bloc-media-text__media {
+        /* Hublots : les encarts sont des PNG ronds (hublot dessiné à ~69 % de la
+           largeur de l'image), les photos ajoutées sont des cercles du même diamètre. */
+        .section-content--beige .bloc-media-text__media,
+        .bloc-media-text--oval .bloc-media-text__media {
             flex: 0 0 48%;
             display: flex;
             justify-content: center;
         }
 
-        .bloc-media-text--brunch .bloc-media-text__media img {
-            width: min(85%, 380px);
+        .section-content--beige .bloc-media-text__media img {
+            width: 100%;
             height: auto;
-            aspect-ratio: 4 / 5;
-            object-fit: cover;
-            border: 16px solid #ffd202;
-            border-radius: 50%;
-            transform: rotate(-8deg);
         }
 
-        .section-content--brunch {
-            padding-top: 60px;
+        .bloc-media-text--brunch .bloc-media-text__media img,
+        .bloc-media-text--oval .bloc-media-text__media img {
+            width: 69%;
+            height: auto;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border: 16px solid #9bb909;
+            border-radius: 50%;
+        }
+
+        .bloc-media-text--brunch .bloc-media-text__media img {
+            border-color: #ffd202;
+        }
+
+        .bloc-media-text--tomato .bloc-media-text__media img {
+            border-color: #ec6620;
+        }
+
+        .section-content--peniche {
+            padding-top: 20px;
+        }
+
+
+        .bloc-fullwidth a {
+            display: block;
+        }
+
+        .home-access {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .home-access ul {
+            list-style: none;
+            margin: 0 0 30px;
+            padding: 0;
+        }
+
+        .home-access li {
+            margin-bottom: 6px;
+        }
+
+        .home-access .cta {
+            display: inline-flex;
+            margin: 0;
+            background-color: transparent;
+        }
+
+        .home-faq {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 20px 20px 80px;
+        }
+
+        .home-faq details {
+            border-bottom: 2px dashed #000;
+        }
+
+        .home-faq summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 0;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .home-faq summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .home-faq summary::after {
+            content: '+';
+            flex: none;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .home-faq details[open] summary::after {
+            content: '\2212';
+        }
+
+        .home-faq p {
+            margin: 0 0 18px;
+        }
+
+        .section-content--beige {
+            position: relative;
+        }
+
+        body.home .section-content--beige:before {
+            display: none;
+        }
+
+        .home-thread {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .home-thread path {
+            fill: none;
+            stroke: #161615;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         @media screen and (min-width: 1024px) {
-            .bloc-media-text--brunch .bloc-media-text__media img {
-                width: 340px;
+            .home-thread {
+                display: block;
+            }
+        }
+
+        .section-content--beige > *:not(.home-thread) {
+            position: relative;
+            z-index: 1;
+        }
+
+        .home-access li,
+        .home-faq summary {
+            font-size: 12px;
+        }
+
+        .bloc-media-text--oval p a,
+        .home-faq p a {
+            color: inherit;
+            text-decoration: underline;
+        }
+
+        @media screen and (min-width: 550px) {
+            .home-access li,
+            .home-faq summary {
+                font-size: 16px;
             }
         }
     </style>
@@ -115,14 +254,17 @@
 
         <section class="section-content section-content--prog">
             <h2>Prog' du mois</h2>
-            <?php
-            $image = get_field('programmation_du_mois', $hp->ID);
-            if (isset($image) && is_array($image)) : ?>
-                <?php mkwvs_the_image($image, 'full', [
-                    'class'   => 'zoomable',
-                    'sizes'   => '(max-width: 900px) 100vw, 900px',
-                    'onclick' => "this.classList.toggle('zoomed')",
-                ], 'Programmation du mois du Bus Magique'); ?>
+            <?php $image = get_field('programmation_du_mois', $hp->ID); ?>
+            <?php if (isset($image) && is_array($image)) : ?>
+                <div class="home-prog">
+                    <?php mkwvs_the_image($image, 'full', [
+                        'class'                    => 'home-prog__poster',
+                        'sizes'                    => '(max-width: 900px) 100vw, 900px',
+                        'onclick'                  => "this.classList.toggle('zoomed')",
+                        'data-umami-event'         => 'programmation-affiche',
+                        'data-umami-event-source'  => 'accueil',
+                    ], 'Programmation du mois du Bus Magique'); ?>
+                </div>
             <?php elseif (have_rows('page_home_programmation_list')) : ?>
                 <div class="events">
                     <?php echo do_shortcode('[facebook_events col="2" posts_per_page="4"]'); ?>
@@ -132,19 +274,24 @@
 
         <section class="section-bggreen mt75">
             <?php if ($image) : ?>
-                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>">Voir la
+                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>" data-umami-event="programmation-entree" data-umami-event-source="accueil">Voir la
                     programmation en détails !</a>
             <?php elseif (have_rows('page_home_programmation_list')) : ?>
-                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>">Voir la
+                <a class="cta" href="<?php echo get_permalink(get_page_by_path("programmation")); ?>" data-umami-event="programmation-entree" data-umami-event-source="accueil">Voir la
                     programmation</a>
             <?php endif; ?>
         </section>
 
+        <?php $brunch = get_page_by_path('brunch-lille'); ?>
+        <?php $brunch_image = function_exists('mkwvs_peniche_theme_image_id') ? mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', 'Brunch du dimanche sur la péniche du Bus Magique à Lille') : 0; ?>
+        <?php $has_brunch = $brunch instanceof WP_Post && $brunch_image; ?>
+        <?php $timonerie_id = mkwvs_peniche_photo_id('timonerie.jpg', "Timonerie de la péniche avec sa barre à roue d'origine et sa vue sur le canal"); ?>
+        <?php $studio_id = mkwvs_peniche_photo_id('studio-vue-ensemble.jpg', "Vue d'ensemble du studio du Marinier : kitchenette, coin bar et espace nuit"); ?>
         <section class="section-content section-content--beige">
 
+            <svg class="home-thread" aria-hidden="true" focusable="false"><path d=""/></svg>
+
             <h2>Que faire à bord Capitaine ?</h2>
-
-
 
             <?php $image = get_field('page_home_encart_1_image', $hp->ID); ?>
             <?php $titre = get_field('page_home_encart_1_titre', $hp->ID); ?>
@@ -158,54 +305,11 @@
                 <div class="bloc-media-text__content">
                     <h3><?php echo $titre; ?></h3>
                     <?php echo apply_filters('the_content', $description) ?>
-                    <a href="<?php echo $link; ?>" class="cta cta--jungle-green"><?php echo $libelle; ?></a>
+                    <a href="<?php echo $link; ?>" class="cta cta--jungle-green" data-umami-event="restauration-entree" data-umami-event-source="accueil"><?php echo $libelle; ?></a>
                 </div>
             </div>
 
-
-            <?php $image = get_field('page_home_encart_2_image', $hp->ID); ?>
-            <?php $titre = get_field('page_home_encart_2_titre', $hp->ID); ?>
-            <?php $description = get_field('page_home_encart_2_description', $hp->ID); ?>
-            <?php $libelle = get_field('page_home_encart_2_libelle', $hp->ID); ?>
-            <?php $link = get_field('page_home_encart_2_link', $hp->ID); ?>
-            <div class="bloc-media-text bloc-media-text--right">
-                <div class="bloc-media-text__media">
-                    <?php mkwvs_the_image($image, 'large', ['sizes' => '(max-width: 900px) 100vw, 600px'], (string) $titre); ?>
-                </div>
-                <div class="bloc-media-text__content">
-                    <h3><?php echo $titre; ?></h3>
-                    <?php echo apply_filters('the_content', $description) ?>
-                    <a href="<?php echo $link; ?>" class="cta cta--red"><?php echo $libelle; ?></a>
-                </div>
-            </div>
-
-            <?php $image = get_field('page_home_encart_3_image', $hp->ID); ?>
-            <?php $titre = get_field('page_home_encart_3_titre', $hp->ID); ?>
-            <?php $description = get_field('page_home_encart_3_description', $hp->ID); ?>
-            <?php $libelle = get_field('page_home_encart_3_libelle', $hp->ID); ?>
-            <?php $link = get_field('page_home_encart_3_link', $hp->ID); ?>
-            <div class="bloc-media-text">
-                <div class="bloc-media-text__media">
-                    <?php mkwvs_the_image($image, 'large', ['sizes' => '(max-width: 900px) 100vw, 600px'], (string) $titre); ?>
-                </div>
-                <div class="bloc-media-text__content">
-                    <h3><?php echo $titre; ?></h3>
-                    <?php echo apply_filters('the_content', $description) ?>
-                    <a href="<?php echo $link; ?>" class="cta cta--green"><?php echo $libelle; ?></a>
-                </div>
-            </div>
-
-            <div class="bloc-fullwidth">
-                <img src="<?php echo get_stylesheet_directory_uri() . '/images/hp-map@2x.jpg'; ?>" alt="Plan d'accès à la péniche Le Bus Magique, avenue Cuvier à Lille" loading="lazy" decoding="async">
-            </div>
-
-        </section>
-
-        <?php $brunch = get_page_by_path('brunch-lille'); ?>
-        <?php $brunch_image = function_exists('mkwvs_peniche_theme_image_id') ? mkwvs_peniche_theme_image_id('images/brunch-assiette-complete.jpg', 'Brunch du dimanche sur la péniche du Bus Magique à Lille') : 0; ?>
-        <?php $has_brunch = $brunch instanceof WP_Post && $brunch_image; ?>
-        <?php if ($has_brunch) : ?>
-            <section class="section-content section-content--brunch">
+            <?php if ($has_brunch) : ?>
                 <div class="bloc-media-text bloc-media-text--right bloc-media-text--brunch">
                     <div class="bloc-media-text__media">
                         <?php mkwvs_the_image($brunch_image, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], 'Brunch du dimanche sur la péniche du Bus Magique à Lille'); ?>
@@ -216,11 +320,385 @@
                         <a href="<?php echo esc_url(get_permalink($brunch)); ?>" class="cta cta--yellow" data-umami-event="brunch-entree" data-umami-event-source="accueil">Je viens bruncher !</a>
                     </div>
                 </div>
+            <?php endif; ?>
+
+            <?php $image = get_field('page_home_encart_2_image', $hp->ID); ?>
+            <?php $titre = get_field('page_home_encart_2_titre', $hp->ID); ?>
+            <?php $description = get_field('page_home_encart_2_description', $hp->ID); ?>
+            <?php $libelle = get_field('page_home_encart_2_libelle', $hp->ID); ?>
+            <?php $link = get_field('page_home_encart_2_link', $hp->ID); ?>
+            <div class="bloc-media-text">
+                <div class="bloc-media-text__media">
+                    <?php mkwvs_the_image($image, 'large', ['sizes' => '(max-width: 900px) 100vw, 600px'], (string) $titre); ?>
+                </div>
+                <div class="bloc-media-text__content">
+                    <h3><?php echo $titre; ?></h3>
+                    <?php echo apply_filters('the_content', $description) ?>
+                    <a href="<?php echo $link; ?>" class="cta cta--red" data-umami-event="coworking-entree" data-umami-event-source="accueil"><?php echo $libelle; ?></a>
+                </div>
+            </div>
+
+            <?php $image = get_field('page_home_encart_3_image', $hp->ID); ?>
+            <?php $titre = get_field('page_home_encart_3_titre', $hp->ID); ?>
+            <?php $description = get_field('page_home_encart_3_description', $hp->ID); ?>
+            <?php $libelle = get_field('page_home_encart_3_libelle', $hp->ID); ?>
+            <?php $link = get_field('page_home_encart_3_link', $hp->ID); ?>
+            <div class="bloc-media-text bloc-media-text--right">
+                <div class="bloc-media-text__media">
+                    <?php mkwvs_the_image($image, 'large', ['sizes' => '(max-width: 900px) 100vw, 600px'], (string) $titre); ?>
+                </div>
+                <div class="bloc-media-text__content">
+                    <h3><?php echo $titre; ?></h3>
+                    <?php echo apply_filters('the_content', $description) ?>
+                    <a href="<?php echo $link; ?>" class="cta cta--green" data-umami-event="location-entree" data-umami-event-source="accueil"><?php echo $libelle; ?></a>
+                </div>
+            </div>
+
+            <?php if ($studio_id) : ?>
+                <div class="bloc-media-text bloc-media-text--oval bloc-media-text--tomato">
+                    <div class="bloc-media-text__media">
+                        <?php mkwvs_the_image($studio_id, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], "Vue d'ensemble du studio du Marinier : kitchenette, coin bar et espace nuit"); ?>
+                    </div>
+                    <div class="bloc-media-text__content">
+                        <h3>Dormir à bord</h3>
+                        <p>À l'arrière du bateau, le logement du Marinier, un <a href="/dormir-sur-une-peniche-a-lille/" data-umami-event="hebergement-entree" data-umami-event-source="accueil-texte">logement insolite à Lille</a>, se loue à la nuit pour deux à trois personnes, avec sa terrasse privée sur le pont et sa vue sur le canal. C'est un hébergement indépendant du bar et du restaurant.</p>
+                        <a href="/dormir-sur-une-peniche-a-lille/" class="cta cta--tomato" data-umami-event="hebergement-entree" data-umami-event-source="accueil">Je regarde les dates</a>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="bloc-fullwidth">
+                <a href="https://www.google.com/maps/search/?api=1&amp;query=Le+Bus+Magique%2C+avenue+Cuvier%2C+59800+Lille" target="_blank" rel="noopener" data-umami-event="peniche-carte" data-umami-event-source="accueil" aria-label="Ouvrir le plan d'accès dans Google Maps">
+                    <img src="<?php echo get_stylesheet_directory_uri() . '/images/hp-map@2x.jpg'; ?>" alt="Plan d'accès à la péniche Le Bus Magique, avenue Cuvier à Lille" loading="lazy" decoding="async">
+                </a>
+            </div>
+
+        </section>
+
+        <script>
+            (function () {
+                var section = document.querySelector('.section-content--beige');
+                var prog = document.querySelector('.section-content--prog');
+                var svg = section && section.querySelector('.home-thread');
+                if (!svg || !prog) {
+                    return;
+                }
+
+                // Tracé de images/zigzag.svg, le fond de la section programmation qui
+                // déborde jusqu'ici. Au-delà du bandeau vert, on le redessine pour
+                // l'arrêter derrière la première photo et enchaîner sur le fil.
+                var ZIGZAG = {
+                    width: 2173.689,
+                    height: 2244.023,
+                    d: 'M-1525.246-1018.092s508.292-57.274 675.206 297.847 367.21 235.9 528.56 273.949c76.066 17.937 106.449 102.629 139.361 158.819 52.742 90.048 124.638 161.183 234.357 192.246 80.683 22.843 162.516 11.278 236.992 53.237 63.955 36.031 117.559 82.66 148.587 146.136 62.853 128.584 25.172 298.7-73.06 404.976-142.942 154.644-394.3 131.7-578.255 69.055-65.572-22.331-222.9-84.276-290.6-98.541-124.307-26.192-161.039 7.881-289.4 32.638-145.856 28.131-300.278 100.189-353.561 235.772-44.864 106.965-20.654 216.788 48.052 278.915 114.378 76.912 304.322-57.528 426.795-100.611 144.9-12.677 123.55 2.347 290.465 37.859',
+                    rotate: [5.13, -12382.947, 19127.147]
+                };
+
+                var ns = 'http://www.w3.org/2000/svg';
+                var path = svg.querySelector('path');
+                var zigzag = document.createElementNS(ns, 'path');
+                zigzag.setAttribute('d', ZIGZAG.d);
+                zigzag.setAttribute('transform', 'rotate(' + ZIGZAG.rotate.join(' ') + ')');
+                zigzag.style.display = 'none';
+                svg.appendChild(zigzag);
+
+                var clipStyle = document.createElement('style');
+                document.head.appendChild(clipStyle);
+                var desktop = window.matchMedia('(min-width: 1024px)');
+
+                function zigzagPoints(box, scale) {
+                    var origin = prog.getBoundingClientRect();
+                    var width = document.documentElement.clientWidth;
+                    var x0 = (width - ZIGZAG.width * scale) / 2;
+                    var y0 = origin.top + origin.height * 1.3 - ZIGZAG.height * scale;
+                    var matrix = zigzag.transform.baseVal.consolidate().matrix;
+                    var length = zigzag.getTotalLength();
+                    var step = 2 / scale;
+                    var points = [];
+
+                    for (var l = 0; l <= length; l += step) {
+                        var p = zigzag.getPointAtLength(l).matrixTransform(matrix);
+                        points.push([x0 + p.x * scale - box.left, y0 + p.y * scale - box.top]);
+                    }
+
+                    return points;
+                }
+
+                function update() {
+                    if (!desktop.matches) {
+                        clipStyle.textContent = '';
+                        return;
+                    }
+
+                    var box = section.getBoundingClientRect();
+                    var origin = prog.getBoundingClientRect();
+                    var scale = Math.min(document.documentElement.clientWidth / ZIGZAG.width, origin.height * 1.3 / ZIGZAG.height);
+
+                    var centers = [];
+                    section.querySelectorAll('.bloc-media-text__media').forEach(function (media) {
+                        var r = media.getBoundingClientRect();
+                        centers.push([r.left - box.left + r.width / 2, r.top - box.top + r.height / 2, r.width / 2, r.height / 2]);
+                    });
+                    if (!centers.length) {
+                        return;
+                    }
+
+                    // Partie visible du zigzag : tout ce qui passe sous le bandeau vert,
+                    // jusqu'à son entrée dans la première photo (ou son point le plus proche).
+                    var first = centers[0];
+                    var all = zigzagPoints(box, scale);
+                    var end = -1;
+                    var closest = -1;
+                    var best = Infinity;
+                    for (var i = 0; i < all.length; i++) {
+                        if (all[i][1] < 0) {
+                            continue;
+                        }
+                        var dx = (all[i][0] - first[0]) / first[2];
+                        var dy = (all[i][1] - first[1]) / first[3];
+                        var dist = dx * dx + dy * dy;
+                        if (dist <= 1) {
+                            end = i;
+                            break;
+                        }
+                        if (dist < best) {
+                            best = dist;
+                            closest = i;
+                        }
+                    }
+                    if (end < 0) {
+                        end = closest;
+                    }
+
+                    var d = '';
+                    var drawing = false;
+                    for (var j = 0; j <= end; j++) {
+                        if (all[j][1] < 0) {
+                            drawing = false;
+                            continue;
+                        }
+                        d += (drawing ? ' L' : ' M') + all[j][0].toFixed(1) + ' ' + all[j][1].toFixed(1);
+                        drawing = true;
+                    }
+                    d += (drawing ? ' L' : ' M') + first[0] + ' ' + first[1];
+
+                    // Entre deux photos, le fil sort par le bas, traverse dans l'espace vide
+                    // entre les deux blocs (sans toucher textes ni boutons), puis plonge dans
+                    // la photo suivante. En chemin il fait une boucle ou ondule, au hasard
+                    // mais toujours de la même façon (graine fixe), pour que le tracé ne
+                    // change pas d'une visite à l'autre. Une spline de Catmull-Rom arrondit
+                    // tous les virages.
+                    var seed = 1954;
+                    function random(min, max) {
+                        seed = (seed * 16807) % 2147483647;
+                        return min + (seed / 2147483647) * (max - min);
+                    }
+
+                    // Les blocs se touchent : l'espace libre se mesure sur leur contenu,
+                    // à l'aplomb de [x1, x2].
+                    function edge(block, bottom, x1, x2) {
+                        var y = bottom ? -Infinity : Infinity;
+                        block.querySelectorAll('h3, p, a, img').forEach(function (el) {
+                            var r = el.getBoundingClientRect();
+                            if (r.right - box.left < x1 || r.left - box.left > x2) {
+                                return;
+                            }
+                            y = bottom ? Math.max(y, r.bottom) : Math.min(y, r.top);
+                        });
+                        return y - box.top;
+                    }
+
+                    // Le fil traverse dans la bande libre entre les deux blocs. La boucle
+                    // part de ce fil et déborde du côté où il reste de la place, souvent
+                    // dans l'allée entre les colonnes.
+                    var stops = [];
+                    function wander(from, to, prevBlock, nextBlock, force) {
+                        var dx = to[0] - from[0];
+                        var dir = dx < 0 ? -1 : 1;
+                        var x1 = Math.min(from[0], to[0]);
+                        var x2 = Math.max(from[0], to[0]);
+                        var top = Math.max(edge(prevBlock, true, x1, x2), from[1]) + 18;
+                        var bottom = Math.min(edge(nextBlock, false, x1, x2), to[1]) - 22;
+                        function line(spread) {
+                            return (top + bottom) / 2 + Math.max(0, bottom - top) / 2 * random(-spread, spread);
+                        }
+
+                        // Le fil avance toujours dans le même sens : un point qui ne
+                        // s'éloigne pas assez du précédent ferait une pointe, on le saute.
+                        var fixed = stops.length;
+                        function pass(x, y) {
+                            if (stops.length <= fixed || (x - stops[stops.length - 1][0]) * dir >= 50) {
+                                stops.push([x, y]);
+                            }
+                        }
+
+                        pass(from[0] + dx * random(0.06, 0.16), top + Math.max(0, bottom - top) * random(0, 0.35));
+
+                        // Une ou deux boucles, posées au hasard parmi les endroits où il y a
+                        // la place, de taille et de forme variables, au-dessus ou en dessous
+                        // du fil. Chacune prend toute la hauteur libre à son aplomb.
+                        var spots = [];
+                        var widest = null;
+                        for (var t = 0.28; t <= 0.72; t += 0.04) {
+                            var cx = from[0] + dx * t;
+                            var high = Math.max(edge(prevBlock, true, cx - 110, cx + 110), from[1]) + 16;
+                            var low = Math.min(edge(nextBlock, false, cx - 110, cx + 110), to[1]) - 20;
+                            if (low - high >= 56) {
+                                spots.push({x: cx, high: high, low: low});
+                            }
+                        }
+                        if (force && !spots.length) {
+                            for (t = 0.2; t <= 0.8; t += 0.02) {
+                                cx = from[0] + dx * t;
+                                high = Math.max(edge(prevBlock, true, cx - 40, cx + 40), from[1]) + 12;
+                                low = Math.min(edge(nextBlock, false, cx - 40, cx + 40) - 12, to[1] - 12, bottom);
+                                if (!widest || low - high > widest.low - widest.high) {
+                                    widest = {x: cx, high: high, low: low};
+                                }
+                            }
+                            if (widest.low - widest.high >= 30) {
+                                spots.push(widest);
+                            }
+                        }
+
+                        var loops = [];
+                        var wanted = random(0, 1) < 0.35 ? 2 : 1;
+                        while (spots.length && loops.length < wanted) {
+                            var spot = spots.splice(Math.floor(random(0, spots.length)), 1)[0];
+                            spots = spots.filter(function (s) {
+                                return Math.abs(s.x - spot.x) > 200;
+                            });
+                            loops.push(spot);
+                        }
+                        loops.sort(function (l1, l2) {
+                            return (l1.x - l2.x) * dir;
+                        });
+
+                        if (!loops.length) {
+                            pass(from[0] + dx * random(0.3, 0.4), line(1));
+                            pass(from[0] + dx * random(0.6, 0.7), line(1));
+                        }
+
+                        loops.forEach(function (spot) {
+                            var ry = Math.max(random(0.32, 0.5) * Math.min(spot.low - spot.high, 100), Math.min(16, (spot.low - spot.high) / 2));
+                            var rx = Math.min(ry * random(0.8, 1.4), 48);
+                            var up = random(0, 1) < 0.5 ? -1 : 1;
+                            var y0 = up > 0 ? spot.high + random(0, spot.low - spot.high - 2 * ry) : spot.low - random(0, spot.low - spot.high - 2 * ry);
+
+                            while (stops.length > fixed && (spot.x - dir * rx * 1.4 - stops[stops.length - 1][0]) * dir < 50) {
+                                stops.pop();
+                            }
+                            stops.push([spot.x - dir * rx * 1.4, y0]);
+                            for (var a = 1; a < 8; a++) {
+                                stops.push([spot.x + dir * rx * Math.sin(a * Math.PI / 4), y0 + up * ry * (1 - Math.cos(a * Math.PI / 4))]);
+                            }
+                            stops.push([spot.x + dir * rx * 1.4, y0]);
+                            fixed = stops.length;
+                        });
+
+                        pass(from[0] + dx * random(0.84, 0.94), Math.min(Math.max(bottom, top), Math.max(stops[stops.length - 1][1] + 10, top + Math.max(0, bottom - top) * random(0.65, 1))));
+                        while (stops.length > fixed && (to[0] - stops[stops.length - 1][0]) * dir < 40) {
+                            stops.pop();
+                        }
+                        stops.push(to);
+                    }
+
+                    var blocks = section.querySelectorAll('.bloc-media-text');
+                    stops.push([first[0], first[1]]);
+                    for (var n = 1; n < centers.length; n++) {
+                        wander(centers[n - 1], centers[n], blocks[n - 1], blocks[n], n === 2);
+                    }
+
+                    var map = section.querySelector('.bloc-fullwidth');
+                    if (map) {
+                        var m = map.getBoundingClientRect();
+                        var last = centers[centers.length - 1];
+                        var other = centers.length > 1 ? centers[centers.length - 2][0] : m.left - box.left + m.width / 2;
+                        wander(last, [other, m.top - box.top + 20], blocks[blocks.length - 1], map, true);
+                    }
+
+                    for (var k = 0; k < stops.length - 1; k++) {
+                        var p0 = stops[k - 1] || stops[k];
+                        var p1 = stops[k];
+                        var p2 = stops[k + 1];
+                        var p3 = stops[k + 2] || p2;
+                        d += ' C' + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + ' ' + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)
+                            + ' ' + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + ' ' + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)
+                            + ' ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+                    }
+
+                    svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
+                    path.setAttribute('d', d);
+                    path.setAttribute('stroke-width', (6 * scale).toFixed(2));
+                    path.setAttribute('stroke-dasharray', (30 * scale).toFixed(2));
+
+                    var hidden = Math.max(0, origin.top + origin.height * 1.3 - box.top);
+                    clipStyle.textContent = 'body.home .section-content--prog:before{clip-path:inset(0 0 ' + hidden + 'px 0)}';
+                }
+
+                update();
+                window.addEventListener('load', update);
+                desktop.addEventListener('change', update);
+                if ('ResizeObserver' in window) {
+                    new ResizeObserver(update).observe(section);
+                } else {
+                    window.addEventListener('resize', update);
+                }
+            })();
+        </script>
+
+        <section class="section-content home-access">
+            <h2>Où est amarrée la péniche ?</h2>
+            <p>Au cœur de Lille, le long de la Deûle, juste à l'entrée de la Citadelle.</p>
+            <ul>
+                <li><strong>Adresse :</strong> péniche Le Bus Magique, avenue Cuvier, 59800 Lille</li>
+                <li><strong>Métro :</strong> République Beaux-Arts</li>
+                <li><strong>Bus :</strong> arrêt Champ de Mars</li>
+                <li><strong>V'Lille :</strong> une station à moins de 5 minutes à pied</li>
+                <li><strong>Voiture :</strong> parking du Champ de Mars, juste à côté</li>
+            </ul>
+            <a class="cta cta--tomato" href="https://www.google.com/maps/dir/?api=1&amp;destination=Le+Bus+Magique%2C+avenue+Cuvier%2C+59800+Lille" target="_blank" rel="noopener" data-umami-event="peniche-itineraire" data-umami-event-source="accueil">Je calcule mon itinéraire</a>
+        </section>
+
+        <?php if ($timonerie_id) : ?>
+            <section class="section-content section-content--peniche">
+                <h2>Une péniche citerne de 1954</h2>
+                <div class="bloc-media-text bloc-media-text--right bloc-media-text--oval">
+                    <div class="bloc-media-text__media">
+                        <?php mkwvs_the_image($timonerie_id, 'large', ['sizes' => '(max-width: 900px) 80vw, 420px'], "Timonerie de la péniche avec sa barre à roue d'origine et sa vue sur le canal"); ?>
+                    </div>
+                    <div class="bloc-media-text__content">
+                        <p>Le bateau s'appelait l'Île. Cette péniche citerne construite en 1954, l'association l'a choisie en février 2019, après avoir obtenu l'été précédent l'autorisation de stationner devant le Champ de Mars. De février 2019 à octobre 2020, des chantiers participatifs l'ont transformée en lieu de vie : c'est aujourd'hui la péniche associative de Lille, ouverte à toutes et à tous.</p>
+                        <a href="/notre-histoire/" class="cta cta--green" data-umami-event="peniche-activite" data-umami-event-cible="histoire">Je lis son histoire</a>
+                    </div>
+                </div>
             </section>
         <?php endif; ?>
+
+        <section class="section-content home-faq">
+            <h2>Questions fréquentes</h2>
+            <details open>
+                <summary>Où se trouve la péniche Le Bus Magique à Lille ?</summary>
+                <p>La péniche est amarrée avenue Cuvier, 59800 Lille, à l'entrée de la Citadelle, le long de la Deûle. On y accède par le métro République Beaux-Arts ou l'arrêt de bus Champ de Mars, et le parking du Champ de Mars se trouve juste à côté.</p>
+            </details>
+            <details>
+                <summary>Peut-on manger et boire un verre sur la péniche ?</summary>
+                <p>Oui. La péniche sert des plats du jour les jeudi et vendredi midi et un <a href="/brunch-lille/" data-umami-event="brunch-entree" data-umami-event-source="accueil-faq">brunch le dimanche</a>, avec une cuisine maison, bio et de saison. Le bar propose des bières locales, des vins et des boissons chaudes, à toute heure du jeudi au dimanche (et même le mercredi à la belle saison)&nbsp;!</p>
+            </details>
+            <details>
+                <summary>Faut-il adhérer à l'association pour monter à bord ?</summary>
+                <p>Oui. Le Bus Magique est une association loi 1901 née au printemps 2018, qui vit grâce à ses bénévoles et à ses adhérents&nbsp;: l'adhésion est donc nécessaire. Son montant est libre, c'est vous qui décidez, et elle se prend directement à bord auprès d'un bénévole ou d'un serveur. <a href="/monter-a-bord/" data-umami-event="peniche-activite" data-umami-event-cible="adhesion">Adhérer et monter à bord</a>.</p>
+            </details>
+            <details>
+                <summary>Peut-on privatiser la péniche pour un événement ?</summary>
+                <p>Oui, pour des événements privés comme un anniversaire, un séminaire, une soirée d'entreprise ou un mariage. La salle accueille 60 personnes assises et 100 en cocktail, la terrasse 40 assises et 60 en cocktail. Les disponibilités se consultent directement sur <a href="/location/" data-umami-event="peniche-activite" data-umami-event-cible="location">notre page de privatisation</a>.</p>
+            </details>
+            <details>
+                <summary>Peut-on dormir sur la péniche ?</summary>
+                <p>Oui. Le <a href="/dormir-sur-une-peniche-a-lille/" data-umami-event="hebergement-entree" data-umami-event-source="accueil-faq">logement du Marinier</a>, à l'arrière du bateau, se loue à la nuit pour deux à trois personnes, avec sa terrasse privée et sa salle de bain.</p>
+            </details>
+        </section>
     <?php endwhile; ?>
 <?php endif; ?>
-
-<?php include(locate_template('template-part/blocks/peniche-link.php')); ?>
 
 <?php get_footer();
