@@ -230,7 +230,7 @@ function mkwvs_brunch_page_content(array $photos): string
       <h2>Un brunch sur l'eau, au cœur de Lille</h2>
       <p>Le Bus Magique est une péniche citerne de 1954 devenue un tiers-lieu associatif&nbsp;: bar, restaurant, concerts, ateliers et coworking. Le dimanche, on y brunche au calme, au bord de l'eau, à l'entrée de la Citadelle et à dix minutes à pied du Vieux-Lille.</p>
       <p>Certains dimanches, le brunch prend des airs de fête&nbsp;: brunch musical avec concert, brunch solidaire… Ces rendez-vous sont annoncés dans <a href="/programmation/" data-umami-event="brunch-lien" data-umami-event-cible="programmation">la programmation</a>.</p>
-      <p class="peniche__split-cta"><a class="cta cta--jungle-green" href="/peniche-lille/" data-umami-event="brunch-lien" data-umami-event-cible="peniche">Découvrir la péniche</a></p>
+      <p class="peniche__split-cta"><a class="cta cta--jungle-green" href="/" data-umami-event="brunch-lien" data-umami-event-cible="peniche">Découvrir la péniche</a></p>
     </div>
     <figure class="peniche__split-media">
       {{photo_peniche}}

@@ -159,13 +159,6 @@ function mkwvs_peniche_photos(): array
     return $photos;
 }
 
-function mkwvs_peniche_page_url(): string
-{
-    $page = get_page_by_path(MKWVS_PENICHE_PAGE_SLUG);
-
-    return $page instanceof WP_Post ? (string) get_permalink($page) : home_url('/' . MKWVS_PENICHE_PAGE_SLUG . '/');
-}
-
 /**
  * Réutilise les photos déjà importées par la page gîte, sinon les importe.
  */

@@ -158,7 +158,7 @@ function mkwvs_fb_strip_venue_from_title(string $title, int $post_id = 0): strin
         return $title;
     }
 
-    return preg_replace('#\s*[/|@\x{2013}\x{2014}-]\s*P[e\x{00E9}]niche\s+le\s+bus\s+magique\s*$#iu', '', $title);
+    return preg_replace('#\s*[/|@\x{2013}\x{2014}\x{239F}-]\s*P[e\x{00E9}]niche\s+le\s+bus\s+magique\s*$#iu', '', $title);
 }
 add_filter('the_title', 'mkwvs_fb_strip_venue_from_title', 10, 2);
 
