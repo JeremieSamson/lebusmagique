@@ -152,7 +152,7 @@ function mkwvs_legal_page_content_mentions(): string
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>Le site est hébergé par Symfolidity (SEOPress.host), SASU au capital de 1 000 €, 108 rue Bayard, 59000 Lille, France, RCS Lille Métropole 912 206 372. Contact : contact@seopress.host.</p>
+<p>Le site est hébergé par Symfolidity (Jérémie Samson), SASU au capital de 1 000 €, 108 rue Bayard, 59000 Lille, France, RCS Lille Métropole 912 206 372. Contact : contact@jeremiesamson.fr.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
@@ -283,7 +283,7 @@ function mkwvs_legal_page_content_confidentialite(): string
 <!-- wp:list -->
 <ul class="wp-block-list">
 <!-- wp:list-item -->
-<li>Symfolidity (SEOPress.host), pour l'hébergement du site et des données qu'il contient, sur un serveur situé en France</li>
+<li>Symfolidity (Jérémie Samson), pour l'hébergement du site et des données qu'il contient, sur un serveur situé en France</li>
 <!-- /wp:list-item -->
 <!-- wp:list-item -->
 <li>Brevo, pour l'envoi des e-mails de la newsletter et des e-mails de suivi de vos demandes</li>
