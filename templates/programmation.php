@@ -21,7 +21,7 @@
                 <h2 class="has-text-align-center">Événements à venir</h2>
 
                 <div class="events">
-                    <?php echo do_shortcode('[facebook_events col="2" posts_per_page="20"]'); ?>
+                    <?php echo do_shortcode('[facebook_events col="2" posts_per_page="40"]'); ?>
                 </div>
 
             </section>
