@@ -119,9 +119,9 @@ function mkwvs_event_formats(): array
             ],
             'infos'       => [
                 ['Quand', 'Une fois par mois, consultez la <a href="/programmation/">programmation</a>'],
-                ['Heure', '20h (show majoritairement debout)'],
+                ['Heure', '19h30 pour les bingos et games<br>20h pour les shows (majoritairement debout)'],
                 ['Tarif', 'Entrée à prix libre (cash, Lydia ou PayPal), adhésion à prix libre à partir de 1&nbsp;€'],
-                ['Réservation', 'Conseillée les soirs de drag bingo : voir la fiche de l\'événement'],
+                ['Réservation', 'Conseillée pour les bingos et games (pas pour les shows) : voir la fiche de l\'événement'],
             ],
             'faq'         => [
                 ["C'est quoi un drag show ?", "Un spectacle où des artistes drag performent en chanson, danse, lip-sync ou humour. Au Bus Magique, c'est animé par Stargirl, dans un cadre bienveillant ouvert à toustes."],
